@@ -4,7 +4,7 @@ import {
   createUserProfile,
   getUserProfile,
   updateUserProfile,
-} from "~/controllers/profile";
+} from "~/controllers/user/profile";
 import { uploadOne } from "~/middlewares/upload";
 
 const profileRouter = Router();

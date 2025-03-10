@@ -4,7 +4,7 @@ import {
   createCategory,
   getCategories,
   updateCategory,
-} from "~/controllers/category";
+} from "~/controllers/public/category";
 import { verifyRequest } from "~/middlewares/auth";
 
 const categoryRouter = Router();

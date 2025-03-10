@@ -5,7 +5,7 @@ import {
   getProduct,
   getProducts,
   updateProduct,
-} from "~/controllers/product";
+} from "~/controllers/public/product";
 import { verifyRequest } from "~/middlewares/auth";
 import { uploadMultiple } from "~/middlewares/upload";
 

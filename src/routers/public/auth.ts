@@ -8,7 +8,7 @@ import {
   signUp,
   updatePassword,
   verifyOtp,
-} from "~/controllers/auth";
+} from "~/controllers/public/auth";
 import { verifyRequest } from "~/middlewares/auth";
 
 const authRouter = Router();

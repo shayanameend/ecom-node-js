@@ -4,7 +4,7 @@ import {
   createVendorProfile,
   getVendorProfile,
   updateVendorProfile,
-} from "~/controllers/profile";
+} from "~/controllers/vendor/profile";
 import { uploadOne } from "~/middlewares/upload";
 
 const profileRouter = Router();

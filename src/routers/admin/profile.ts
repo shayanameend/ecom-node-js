@@ -4,7 +4,7 @@ import {
   createAdminProfile,
   getAdminProfile,
   updateAdminProfile,
-} from "~/controllers/profile";
+} from "~/controllers/admin/profile";
 import { uploadOne } from "~/middlewares/upload";
 
 const profileRouter = Router();
