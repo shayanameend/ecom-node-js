@@ -8,7 +8,7 @@ import {
   getCategoriesQuerySchema,
   updateCategoryBodySchema,
   updateCategoryParamsSchema,
-} from "~/validators/category";
+} from "~/validators/public/category";
 
 async function getCategories(request: Request, response: Response) {
   try {

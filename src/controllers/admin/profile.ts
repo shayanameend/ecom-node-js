@@ -6,7 +6,7 @@ import { addFile, removeFile } from "~/utils/file";
 import {
   createAdminProfileBodySchema,
   updateAdminProfileBodySchema,
-} from "~/validators/profile";
+} from "~/validators/admin/profile";
 
 async function getAdminProfile(request: Request, response: Response) {
   try {

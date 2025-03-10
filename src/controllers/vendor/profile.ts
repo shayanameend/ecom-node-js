@@ -6,7 +6,7 @@ import { addFile, removeFile } from "~/utils/file";
 import {
   createVendorProfileBodySchema,
   updateVendorProfileBodySchema,
-} from "~/validators/profile";
+} from "~/validators/vendor/profile";
 
 async function getVendorProfile(request: Request, response: Response) {
   try {

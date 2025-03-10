@@ -13,7 +13,7 @@ import {
   signUpBodySchema,
   updatePasswordBodySchema,
   verifyOtpBodySchema,
-} from "~/validators/auth";
+} from "~/validators/public/auth";
 
 async function signUp(request: Request, response: Response) {
   try {

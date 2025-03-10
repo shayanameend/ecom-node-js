@@ -10,7 +10,7 @@ import {
   getProductsQuerySchema,
   updateProductBodySchema,
   updateProductParamsSchema,
-} from "~/validators/product";
+} from "~/validators/public/product";
 
 async function getProducts(request: Request, response: Response) {
   try {
