@@ -9,7 +9,8 @@
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
     "dev": "tsx --watch src/server.ts",
-    "start": "tsx src/server.ts"
+    "start": "tsx src/server.ts",
+    "postinstall": "pnpm prisma:generate"
   },
   "packageManager": "pnpm@10.6.2",
   "dependencies": {
