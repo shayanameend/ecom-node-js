@@ -3,10 +3,7 @@ import type { Request, Response } from "express";
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { addFile, removeFile } from "~/utils/file";
-import {
-  createAdminProfileBodySchema,
-  updateAdminProfileBodySchema,
-} from "~/validators/admin/profile";
+import { updateAdminProfileBodySchema } from "~/validators/admin/profile";
 
 async function getAdminProfile(request: Request, response: Response) {
   try {
@@ -36,67 +33,6 @@ async function getAdminProfile(request: Request, response: Response) {
       },
       {
         message: "Profile fetched successfully!",
-      },
-    );
-  } catch (error) {
-    return handleErrors({ response, error });
-  }
-}
-
-async function createAdminProfile(request: Request, response: Response) {
-  try {
-    if (request.user.role !== "UNSPECIFIED") {
-      throw new BadResponse("Profile already exists!");
-    }
-
-    if (!request.file) {
-      throw new BadResponse("Profile picture is required!");
-    }
-
-    const pictureId = addFile({
-      file: request.file,
-    });
-
-    const { name, phone } = createAdminProfileBodySchema.parse(request.body);
-
-    const profile = await prisma.admin.create({
-      data: {
-        pictureId,
-        name,
-        phone,
-        auth: {
-          connect: {
-            id: request.user.id,
-          },
-        },
-      },
-      select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-
-    await prisma.auth.update({
-      where: {
-        id: request.user.id,
-      },
-      data: {
-        role: "ADMIN",
-      },
-    });
-
-    return response.success(
-      {
-        data: {
-          profile,
-        },
-      },
-      {
-        message: "Profile created successfully!",
       },
     );
   } catch (error) {
@@ -168,4 +104,4 @@ async function updateAdminProfile(request: Request, response: Response) {
   }
 }
 
-export { getAdminProfile, createAdminProfile, updateAdminProfile };
+export { getAdminProfile, updateAdminProfile };

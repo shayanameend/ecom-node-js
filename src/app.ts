@@ -25,7 +25,7 @@ app.use(
   verifyRequest({
     isVerified: true,
     allowedTypes: ["ACCESS"],
-    allowedRoles: ["ADMIN"],
+    allowedRoles: ["SUPER_ADMIN", "ADMIN"],
   }),
   adminRouter,
 );
