@@ -22,26 +22,10 @@ async function getProducts(request: Request, response: Response) {
       vendorId,
     } = getProductsQuerySchema.parse(request.query);
 
-    const category = await prisma.category.findUnique({
-      where: { id: categoryId, status: "APPROVED", isDeleted: false },
-      select: { id: true },
-    });
-
-    if (!category) {
-      return response.success(
-        {
-          data: { products: [] },
-          meta: { total: 0, pages: 0, limit, page },
-        },
-        {
-          message: "Products fetched successfully!",
-        },
-      );
-    }
-
-    const vendor = await prisma.vendor.findUnique({
-      where: {
-        id: vendorId,
+    const where: Prisma.ProductWhereInput = {
+      isDeleted: false,
+      category: { status: "APPROVED", isDeleted: false },
+      vendor: {
         auth: {
           status: "APPROVED",
           role: "VENDOR",
@@ -49,23 +33,6 @@ async function getProducts(request: Request, response: Response) {
           isDeleted: false,
         },
       },
-      select: { id: true },
-    });
-
-    if (!vendor) {
-      return response.success(
-        {
-          data: { products: [] },
-          meta: { total: 0, pages: 0, limit, page },
-        },
-        {
-          message: "Products fetched successfully!",
-        },
-      );
-    }
-
-    const where: Prisma.ProductWhereInput = {
-      isDeleted: false,
     };
 
     if (name) {
@@ -158,7 +125,19 @@ async function getProduct(request: Request, response: Response) {
     const { id } = getProductParamsSchema.parse(request.params);
 
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: {
+        id,
+        isDeleted: false,
+        category: { status: "APPROVED", isDeleted: false },
+        vendor: {
+          auth: {
+            status: "APPROVED",
+            role: "VENDOR",
+            isVerified: true,
+            isDeleted: false,
+          },
+        },
+      },
       select: {
         id: true,
         pictureIds: true,
