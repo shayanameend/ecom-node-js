@@ -87,7 +87,7 @@ async function signUp(request: Request, response: Response) {
       },
     });
 
-    await sendOTP({
+    sendOTP({
       to: auth.email,
       code: otp.code,
     });
@@ -171,7 +171,7 @@ async function signIn(request: Request, response: Response) {
         },
       });
 
-      await sendOTP({
+      sendOTP({
         to: user.email,
         code: otp.code,
       });
@@ -270,7 +270,7 @@ async function forgotPassword(request: Request, response: Response) {
       },
     });
 
-    await sendOTP({
+    sendOTP({
       to: user.email,
       code: otp.code,
     });
@@ -324,7 +324,7 @@ async function resendOtp(request: Request, response: Response) {
       },
     });
 
-    await sendOTP({
+    sendOTP({
       to: request.user.email,
       code: otp.code,
     });
