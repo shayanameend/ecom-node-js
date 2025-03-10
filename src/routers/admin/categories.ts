@@ -2,9 +2,9 @@ import { Router } from "express";
 
 import {
   createCategory,
+  deleteCategory,
   getCategories,
   updateCategory,
-  deleteCategory,
 } from "~/controllers/admin/categories";
 
 const categoriesRouter = Router();

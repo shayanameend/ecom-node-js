@@ -5,10 +5,10 @@ import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import {
   createCategoryBodySchema,
+  deleteCategoryParamsSchema,
   getCategoriesQuerySchema,
   updateCategoryBodySchema,
   updateCategoryParamsSchema,
-  deleteCategoryParamsSchema,
 } from "~/validators/admin/categories";
 
 async function getCategories(request: Request, response: Response) {
