@@ -1,5 +1,36 @@
 import { Router } from "express";
 
-const categoriesRouter = Router();
+import {
+  createCategory,
+  getCategories,
+  updateCategory,
+} from "~/controllers/public/category";
+import { verifyRequest } from "~/middlewares/auth";
 
-export { categoriesRouter };
+const categoryRouter = Router();
+
+categoryRouter.get("/", getCategories);
+
+categoryRouter.post(
+  "/",
+  verifyRequest({
+    allowedTypes: ["ACCESS"],
+    allowedStatus: ["APPROVED"],
+    allowedRoles: ["SUPER_ADMIN", "ADMIN", "VENDOR"],
+    isVerified: true,
+  }),
+  createCategory,
+);
+
+categoryRouter.put(
+  "/:id",
+  verifyRequest({
+    allowedTypes: ["ACCESS"],
+    allowedStatus: ["APPROVED"],
+    allowedRoles: ["SUPER_ADMIN", "ADMIN"],
+    isVerified: true,
+  }),
+  updateCategory,
+);
+
+export { categoryRouter };
