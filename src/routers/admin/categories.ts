@@ -2,8 +2,8 @@ import { Router } from "express";
 
 import {
   createCategory,
-  deleteCategory,
   getCategories,
+  toggleCategoryIsDeleted,
   updateCategory,
 } from "~/controllers/admin/categories";
 
@@ -15,6 +15,6 @@ categoriesRouter.post("/", createCategory);
 
 categoriesRouter.put("/:id", updateCategory);
 
-categoriesRouter.delete("/:id", deleteCategory);
+categoriesRouter.delete("/:id", toggleCategoryIsDeleted);
 
 export { categoriesRouter };

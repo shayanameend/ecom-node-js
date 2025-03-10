@@ -88,10 +88,17 @@ const updateCategoryBodySchema = zod.object({
     .optional(),
 });
 
-const deleteCategoryParamsSchema = zod.object({
+const toggleCategoryIsDeletedParamsSchema = zod.object({
   id: zod.string({
     message: "ID must be a string!",
   }),
+});
+
+const toggleCategoryIsDeletedBodySchema = zod.object({
+  isDeleted: zod.preprocess(
+    (val) => (val === "true" ? true : val === "false" ? false : val),
+    zod.boolean(),
+  ),
 });
 
 export {
@@ -99,5 +106,6 @@ export {
   createCategoryBodySchema,
   updateCategoryParamsSchema,
   updateCategoryBodySchema,
-  deleteCategoryParamsSchema,
+  toggleCategoryIsDeletedParamsSchema,
+  toggleCategoryIsDeletedBodySchema,
 };

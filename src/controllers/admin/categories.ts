@@ -5,8 +5,9 @@ import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import {
   createCategoryBodySchema,
-  deleteCategoryParamsSchema,
   getCategoriesQuerySchema,
+  toggleCategoryIsDeletedBodySchema,
+  toggleCategoryIsDeletedParamsSchema,
   updateCategoryBodySchema,
   updateCategoryParamsSchema,
 } from "~/validators/admin/categories";
@@ -123,15 +124,14 @@ async function updateCategory(request: Request, response: Response) {
   }
 }
 
-async function deleteCategory(request: Request, response: Response) {
+async function toggleCategoryIsDeleted(request: Request, response: Response) {
   try {
-    const { id } = deleteCategoryParamsSchema.parse(request.params);
+    const { id } = toggleCategoryIsDeletedParamsSchema.parse(request.params);
+    const validatedData = toggleCategoryIsDeletedBodySchema.parse(request.body);
 
     const category = await prisma.category.update({
       where: { id },
-      data: {
-        isDeleted: true,
-      },
+      data: validatedData,
       select: {
         id: true,
         name: true,
@@ -151,7 +151,7 @@ async function deleteCategory(request: Request, response: Response) {
         data: { category },
       },
       {
-        message: "Category deleted successfully!",
+        message: "Category updated successfully!",
       },
     );
   } catch (error) {
@@ -159,4 +159,9 @@ async function deleteCategory(request: Request, response: Response) {
   }
 }
 
-export { getCategories, createCategory, updateCategory, deleteCategory };
+export {
+  getCategories,
+  createCategory,
+  updateCategory,
+  toggleCategoryIsDeleted,
+};

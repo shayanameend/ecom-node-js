@@ -7,8 +7,8 @@ import { addFile, removeFile } from "~/utils/file";
 import {
   getProductParamsSchema,
   getProductsQuerySchema,
-  toggleProductIsDeletedParamsSchema,
   toggleProductIsDeletedBodySchema,
+  toggleProductIsDeletedParamsSchema,
 } from "~/validators/admin/products";
 
 async function getProducts(request: Request, response: Response) {
