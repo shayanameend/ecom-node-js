@@ -7,7 +7,7 @@ import morgan from "morgan";
 import { verifyRequest } from "~/middlewares/auth";
 import { expandResponse } from "~/middlewares/response";
 import { adminRouter } from "~/routers/admin";
-import { authRouter } from "~/routers/auth";
+import { publicRouter } from "~/routers/public";
 import { userRouter } from "~/routers/user";
 import { vendorRouter } from "~/routers/vendor";
 
@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(expandResponse);
 
-app.use("/auth", authRouter);
+app.use("/", publicRouter);
 app.use("/admin", adminRouter);
 app.use("/vendor", vendorRouter);
 app.use("/user", userRouter);
