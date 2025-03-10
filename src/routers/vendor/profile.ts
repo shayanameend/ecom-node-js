@@ -1,15 +1,12 @@
 import { Router } from "express";
 
-import {
-  getVendorProfile,
-  updateVendorProfile,
-} from "~/controllers/vendor/profile";
+import { getProfile, updateProfile } from "~/controllers/vendor/profile";
 import { uploadOne } from "~/middlewares/upload";
 
 const profileRouter = Router();
 
-profileRouter.get("/", getVendorProfile);
+profileRouter.get("/", getProfile);
 
-profileRouter.put("/", uploadOne("picture"), updateVendorProfile);
+profileRouter.put("/", uploadOne("picture"), updateProfile);
 
 export { profileRouter };

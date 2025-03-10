@@ -5,7 +5,7 @@ import { prisma } from "~/lib/prisma";
 import { addFile, removeFile } from "~/utils/file";
 import { updateVendorProfileBodySchema } from "~/validators/vendor/profile";
 
-async function getVendorProfile(request: Request, response: Response) {
+async function getProfile(request: Request, response: Response) {
   try {
     const profile = await prisma.vendor.findUnique({
       where: {
@@ -44,7 +44,7 @@ async function getVendorProfile(request: Request, response: Response) {
   }
 }
 
-async function updateVendorProfile(request: Request, response: Response) {
+async function updateProfile(request: Request, response: Response) {
   try {
     if (request.user.role === "UNSPECIFIED") {
       throw new BadResponse("Profile does not exist!");
@@ -117,4 +117,4 @@ async function updateVendorProfile(request: Request, response: Response) {
   }
 }
 
-export { getVendorProfile, updateVendorProfile };
+export { getProfile, updateProfile };

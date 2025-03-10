@@ -1,15 +1,12 @@
 import { Router } from "express";
 
-import {
-  getAdminProfile,
-  updateAdminProfile,
-} from "~/controllers/admin/profile";
+import { getProfile, updateProfile } from "~/controllers/admin/profile";
 import { uploadOne } from "~/middlewares/upload";
 
 const profileRouter = Router();
 
-profileRouter.get("/", getAdminProfile);
+profileRouter.get("/", getProfile);
 
-profileRouter.put("/", uploadOne("picture"), updateAdminProfile);
+profileRouter.put("/", uploadOne("picture"), updateProfile);
 
 export { profileRouter };

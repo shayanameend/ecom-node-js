@@ -5,7 +5,7 @@ import { prisma } from "~/lib/prisma";
 import { addFile, removeFile } from "~/utils/file";
 import { updateUserProfileBodySchema } from "~/validators/user/profile";
 
-async function getUserProfile(request: Request, response: Response) {
+async function getProfile(request: Request, response: Response) {
   try {
     const profile = await prisma.user.findUnique({
       where: {
@@ -43,7 +43,7 @@ async function getUserProfile(request: Request, response: Response) {
   }
 }
 
-async function updateUserProfile(request: Request, response: Response) {
+async function updateProfile(request: Request, response: Response) {
   try {
     if (request.user.role === "UNSPECIFIED") {
       throw new BadResponse("Profile does not exist!");
@@ -114,4 +114,4 @@ async function updateUserProfile(request: Request, response: Response) {
   }
 }
 
-export { getUserProfile, updateUserProfile };
+export { getProfile, updateProfile };

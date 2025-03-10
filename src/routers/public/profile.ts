@@ -4,7 +4,7 @@ import {
   createAdminProfile,
   createUserProfile,
   createVendorProfile,
-} from "~/controllers/public/public";
+} from "~/controllers/public/profile";
 import { verifyRequest } from "~/middlewares/auth";
 import { uploadOne } from "~/middlewares/upload";
 
