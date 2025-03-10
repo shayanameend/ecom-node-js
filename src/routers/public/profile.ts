@@ -14,6 +14,7 @@ profileRouter.post(
   "/admin",
   verifyRequest({
     isVerified: true,
+    isDeleted: false,
     allowedTypes: ["ACCESS"],
     allowedRoles: ["UNSPECIFIED"],
   }),
@@ -24,6 +25,7 @@ profileRouter.post(
   "/vendor",
   verifyRequest({
     isVerified: true,
+    isDeleted: false,
     allowedTypes: ["ACCESS"],
     allowedRoles: ["UNSPECIFIED"],
   }),
@@ -34,6 +36,7 @@ profileRouter.post(
   "/user",
   verifyRequest({
     isVerified: true,
+    isDeleted: false,
     allowedTypes: ["ACCESS"],
     allowedRoles: ["UNSPECIFIED"],
   }),

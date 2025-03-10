@@ -46,8 +46,8 @@ authRouter.post(
 authRouter.post(
   "/refresh",
   verifyRequest({
-    allowedTypes: ["ACCESS"],
     isVerified: true,
+    allowedTypes: ["ACCESS"],
   }),
   refresh,
 );
