@@ -86,12 +86,12 @@ const updateCategoryBodySchema = zod.object({
       },
     )
     .optional(),
-  isDeleted: zod
-    .preprocess(
-      (val) => (val === "true" ? true : val === "false" ? false : val),
-      zod.boolean(),
-    )
-    .optional(),
+});
+
+const deleteCategoryParamsSchema = zod.object({
+  id: zod.string({
+    message: "ID must be a string!",
+  }),
 });
 
 export {
@@ -99,4 +99,5 @@ export {
   createCategoryBodySchema,
   updateCategoryParamsSchema,
   updateCategoryBodySchema,
+  deleteCategoryParamsSchema,
 };

@@ -8,7 +8,8 @@ import {
   getCategoriesQuerySchema,
   updateCategoryBodySchema,
   updateCategoryParamsSchema,
-} from "~/validators/public/category";
+  deleteCategoryParamsSchema,
+} from "~/validators/admin/categories";
 
 async function getCategories(request: Request, response: Response) {
   try {
@@ -61,12 +62,6 @@ async function getCategories(request: Request, response: Response) {
 async function createCategory(request: Request, response: Response) {
   try {
     const validatedData = createCategoryBodySchema.parse(request.body);
-
-    const role = request.user.role;
-
-    if (role !== "SUPER_ADMIN" && role !== "ADMIN") {
-      validatedData.status = "PENDING";
-    }
 
     const category = await prisma.category.create({
       data: validatedData,
@@ -128,4 +123,40 @@ async function updateCategory(request: Request, response: Response) {
   }
 }
 
-export { getCategories, createCategory, updateCategory };
+async function deleteCategory(request: Request, response: Response) {
+  try {
+    const { id } = deleteCategoryParamsSchema.parse(request.params);
+
+    const category = await prisma.category.update({
+      where: { id },
+      data: {
+        isDeleted: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        isDeleted: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!category) {
+      throw new NotFoundResponse("Category not found!");
+    }
+
+    return response.success(
+      {
+        data: { category },
+      },
+      {
+        message: "Category deleted successfully!",
+      },
+    );
+  } catch (error) {
+    handleErrors({ response, error });
+  }
+}
+
+export { getCategories, createCategory, updateCategory, deleteCategory };

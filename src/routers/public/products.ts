@@ -9,13 +9,13 @@ import {
 import { verifyRequest } from "~/middlewares/auth";
 import { uploadMultiple } from "~/middlewares/upload";
 
-const productRouter = Router();
+const productsRouter = Router();
 
-productRouter.get("/", getProducts);
+productsRouter.get("/", getProducts);
 
-productRouter.get("/:id", getProduct);
+productsRouter.get("/:id", getProduct);
 
-productRouter.post(
+productsRouter.post(
   "/",
   verifyRequest({
     allowedTypes: ["ACCESS"],
@@ -27,7 +27,7 @@ productRouter.post(
   createProduct,
 );
 
-productRouter.put(
+productsRouter.put(
   "/:id",
   verifyRequest({
     allowedTypes: ["ACCESS"],
@@ -39,4 +39,4 @@ productRouter.put(
   updateProduct,
 );
 
-export { productRouter };
+export { productsRouter };
