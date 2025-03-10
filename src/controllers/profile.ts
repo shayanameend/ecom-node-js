@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
-import { addFile, removeFile } from "~/services/file";
+import { addFile, removeFile } from "~/utils/file";
 import {
   createAdminProfileBodySchema,
   createProfileBodySchema,
