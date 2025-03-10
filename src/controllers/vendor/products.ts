@@ -254,13 +254,25 @@ async function updateProduct(request: Request, response: Response) {
       removeFile({ key: pictureId });
     }
 
-    const pictureIds: string[] = [];
+    let pictureIds =
+      (
+        await prisma.product.findUnique({
+          where: { id },
+          select: {
+            pictureIds: true,
+          },
+        })
+      )?.pictureIds ?? [];
 
     for (const file of request.files as Express.Multer.File[]) {
       const pictureId = addFile({ file });
 
       pictureIds.push(pictureId);
     }
+
+    pictureIds = pictureIds.filter(
+      (pictureId) => !validatedData.pictureIds.includes(pictureId),
+    );
 
     const product = await prisma.product.update({
       where: { id },
