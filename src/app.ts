@@ -24,6 +24,7 @@ app.use(
   "/admin",
   verifyRequest({
     isVerified: true,
+    isDeleted: false,
     allowedTypes: ["ACCESS"],
     allowedRoles: ["SUPER_ADMIN", "ADMIN"],
   }),
@@ -33,6 +34,7 @@ app.use(
   "/vendor",
   verifyRequest({
     isVerified: true,
+    isDeleted: false,
     allowedTypes: ["ACCESS"],
     allowedRoles: ["VENDOR"],
   }),
@@ -42,6 +44,7 @@ app.use(
   "/user",
   verifyRequest({
     isVerified: true,
+    isDeleted: false,
     allowedTypes: ["ACCESS"],
     allowedRoles: ["USER"],
   }),
@@ -50,7 +53,11 @@ app.use(
 
 app.get(
   "/test",
-  verifyRequest({ isVerified: true, allowedTypes: ["ACCESS"] }),
+  verifyRequest({
+    isVerified: true,
+    isDeleted: false,
+    allowedTypes: ["ACCESS"],
+  }),
   (_request, response) => {
     response.success({}, { message: "Test route!" });
   },

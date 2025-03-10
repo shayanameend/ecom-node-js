@@ -17,6 +17,7 @@ import { verifyToken } from "~/utils/jwt";
 
 interface VerifyRequestParams {
   isVerified?: boolean;
+  isDeleted?: boolean;
   allowedTypes: TokenType[];
   allowedStatus?: UserStatus[];
   allowedRoles?: Role[];
@@ -24,6 +25,7 @@ interface VerifyRequestParams {
 
 function verifyRequest({
   isVerified,
+  isDeleted,
   allowedTypes,
   allowedStatus,
   allowedRoles,
@@ -73,6 +75,10 @@ function verifyRequest({
 
       if (isVerified && !user?.isVerified) {
         throw new BadResponse("User Not Verified!");
+      }
+
+      if (isDeleted && user?.isDeleted) {
+        throw new BadResponse("User Deleted!");
       }
 
       if (
