@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { sendMessage } from "~/utils/mail";
 import {
   createCategoryBodySchema,
   getCategoriesQuerySchema,
@@ -145,6 +146,31 @@ async function toggleCategoryIsDeleted(request: Request, response: Response) {
     if (!category) {
       throw new NotFoundResponse("Category not found!");
     }
+
+    const emails = (
+      await prisma.product.findMany({
+        where: { categoryId: id },
+        select: {
+          vendor: {
+            select: {
+              auth: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      })
+    ).map((product) => product.vendor.auth.email);
+
+    sendMessage({
+      to: emails.join(", "),
+      subject: `Category ${validatedData.isDeleted ? "Deleted" : "Restored"}`,
+      text: `Category ${category.name} with id ${category.id} has been ${
+        validatedData.isDeleted ? "deleted" : "restored"
+      }`,
+    });
 
     return response.success(
       {
