@@ -16,17 +16,17 @@ import { prisma } from "~/lib/prisma";
 import { verifyToken } from "~/utils/jwt";
 
 interface VerifyRequestParams {
+  isVerified?: boolean;
   allowedTypes: TokenType[];
   allowedStatus?: UserStatus[];
   allowedRoles?: Role[];
-  isVerified?: boolean;
 }
 
 function verifyRequest({
+  isVerified,
   allowedTypes,
   allowedStatus,
   allowedRoles,
-  isVerified,
 }: Readonly<VerifyRequestParams>) {
   return async (request: Request, response: Response, next: NextFunction) => {
     try {

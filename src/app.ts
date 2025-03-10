@@ -20,13 +20,37 @@ app.use(express.urlencoded({ extended: true }));
 app.use(expandResponse);
 
 app.use("/", publicRouter);
-app.use("/admin", adminRouter);
-app.use("/vendor", vendorRouter);
-app.use("/user", userRouter);
+app.use(
+  "/admin",
+  verifyRequest({
+    isVerified: true,
+    allowedTypes: ["ACCESS"],
+    allowedRoles: ["ADMIN"],
+  }),
+  adminRouter,
+);
+app.use(
+  "/vendor",
+  verifyRequest({
+    isVerified: true,
+    allowedTypes: ["ACCESS"],
+    allowedRoles: ["VENDOR"],
+  }),
+  vendorRouter,
+);
+app.use(
+  "/user",
+  verifyRequest({
+    isVerified: true,
+    allowedTypes: ["ACCESS"],
+    allowedRoles: ["USER"],
+  }),
+  userRouter,
+);
 
 app.get(
   "/test",
-  verifyRequest({ allowedTypes: ["ACCESS"], isVerified: true }),
+  verifyRequest({ isVerified: true, allowedTypes: ["ACCESS"] }),
   (_request, response) => {
     response.success({}, { message: "Test route!" });
   },

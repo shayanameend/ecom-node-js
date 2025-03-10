@@ -1,42 +1,18 @@
 import { Router } from "express";
 
 import {
-  createProfile,
-  getProfile,
-  updateProfile,
+  createVendorProfile,
+  getVendorProfile,
+  updateVendorProfile,
 } from "~/controllers/profile";
-import { verifyRequest } from "~/middlewares/auth";
 import { uploadOne } from "~/middlewares/upload";
 
 const profileRouter = Router();
 
-profileRouter.get(
-  "/",
-  verifyRequest({
-    allowedTypes: ["ACCESS"],
-    isVerified: true,
-  }),
-  getProfile,
-);
+profileRouter.get("/", getVendorProfile);
 
-profileRouter.post(
-  "/",
-  verifyRequest({
-    allowedTypes: ["ACCESS"],
-    isVerified: true,
-  }),
-  uploadOne("picture"),
-  createProfile,
-);
+profileRouter.post("/", uploadOne("picture"), createVendorProfile);
 
-profileRouter.put(
-  "/",
-  verifyRequest({
-    allowedTypes: ["ACCESS"],
-    isVerified: true,
-  }),
-  uploadOne("picture"),
-  updateProfile,
-);
+profileRouter.put("/", uploadOne("picture"), updateVendorProfile);
 
 export { profileRouter };
