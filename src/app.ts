@@ -6,10 +6,10 @@ import morgan from "morgan";
 
 import { verifyRequest } from "~/middlewares/auth";
 import { expandResponse } from "~/middlewares/response";
+import { adminRouter } from "~/routers/admin";
 import { authRouter } from "~/routers/auth";
-import { categoryRouter } from "~/routers/category";
-import { profileRouter } from "~/routers/profile";
-import { productRouter } from "~/routers/product";
+import { userRouter } from "~/routers/user";
+import { vendorRouter } from "~/routers/vendor";
 
 const app = express();
 
@@ -20,9 +20,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(expandResponse);
 
 app.use("/auth", authRouter);
-app.use("/profile", profileRouter);
-app.use("/category", categoryRouter);
-app.use("/product", productRouter);
+app.use("/admin", adminRouter);
+app.use("/vendor", vendorRouter);
+app.use("/user", userRouter);
 
 app.get(
   "/test",

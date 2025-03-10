@@ -4,8 +4,8 @@ import { default as argon } from "argon2";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
-import { sendOTP } from "~/utils/mail";
 import { signToken } from "~/utils/jwt";
+import { sendOTP } from "~/utils/mail";
 import {
   forgotPasswordBodySchema,
   resendOtpBodySchema,
