@@ -26,7 +26,9 @@ const getCategoriesQuerySchema = zod.object({
   isDeleted: zod
     .preprocess(
       (val) => (val === "true" ? true : val === "false" ? false : val),
-      zod.boolean(),
+      zod.boolean({
+        message: "isDeleted must be a boolean!",
+      }),
     )
     .optional(),
 });
@@ -97,7 +99,9 @@ const toggleCategoryIsDeletedParamsSchema = zod.object({
 const toggleCategoryIsDeletedBodySchema = zod.object({
   isDeleted: zod.preprocess(
     (val) => (val === "true" ? true : val === "false" ? false : val),
-    zod.boolean(),
+    zod.boolean({
+      message: "isDeleted must be a boolean!",
+    }),
   ),
 });
 
