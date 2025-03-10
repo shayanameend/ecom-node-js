@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { addFile, removeFile } from "~/utils/file";
-import { updateAdminProfileBodySchema } from "~/validators/admin/profile";
+import { updateProfileBodySchema } from "~/validators/admin/profile";
 
 async function getProfile(request: Request, response: Response) {
   try {
@@ -68,7 +68,7 @@ async function updateProfile(request: Request, response: Response) {
       });
     }
 
-    const { name, phone } = updateAdminProfileBodySchema.parse(request.body);
+    const { name, phone } = updateProfileBodySchema.parse(request.body);
 
     const profile = await prisma.admin.update({
       where: {

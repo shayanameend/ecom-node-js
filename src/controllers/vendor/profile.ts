@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { addFile, removeFile } from "~/utils/file";
-import { updateVendorProfileBodySchema } from "~/validators/vendor/profile";
+import { updateProfileBodySchema } from "~/validators/vendor/profile";
 
 async function getProfile(request: Request, response: Response) {
   try {
@@ -73,7 +73,7 @@ async function updateProfile(request: Request, response: Response) {
     }
 
     const { name, description, phone, postalCode, city, pickupAddress } =
-      updateVendorProfileBodySchema.parse(request.body);
+      updateProfileBodySchema.parse(request.body);
 
     const profile = await prisma.vendor.update({
       where: {

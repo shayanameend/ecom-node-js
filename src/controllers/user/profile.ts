@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { addFile, removeFile } from "~/utils/file";
-import { updateUserProfileBodySchema } from "~/validators/user/profile";
+import { updateProfileBodySchema } from "~/validators/user/profile";
 
 async function getProfile(request: Request, response: Response) {
   try {
@@ -72,7 +72,7 @@ async function updateProfile(request: Request, response: Response) {
     }
 
     const { name, phone, postalCode, city, deliveryAddress } =
-      updateUserProfileBodySchema.parse(request.body);
+      updateProfileBodySchema.parse(request.body);
 
     const profile = await prisma.user.update({
       where: {

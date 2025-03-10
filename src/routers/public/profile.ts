@@ -1,17 +1,13 @@
 import { Router } from "express";
 
-import {
-  createAdminProfile,
-  createUserProfile,
-  createVendorProfile,
-} from "~/controllers/public/profile";
+import { createProfile } from "~/controllers/public/profile";
 import { verifyRequest } from "~/middlewares/auth";
 import { uploadOne } from "~/middlewares/upload";
 
 const profileRouter = Router();
 
 profileRouter.post(
-  "/admin",
+  "/",
   verifyRequest({
     isVerified: true,
     isDeleted: false,
@@ -19,29 +15,7 @@ profileRouter.post(
     allowedRoles: ["UNSPECIFIED"],
   }),
   uploadOne("picture"),
-  createAdminProfile,
-);
-profileRouter.post(
-  "/vendor",
-  verifyRequest({
-    isVerified: true,
-    isDeleted: false,
-    allowedTypes: ["ACCESS"],
-    allowedRoles: ["UNSPECIFIED"],
-  }),
-  uploadOne("picture"),
-  createVendorProfile,
-);
-profileRouter.post(
-  "/user",
-  verifyRequest({
-    isVerified: true,
-    isDeleted: false,
-    allowedTypes: ["ACCESS"],
-    allowedRoles: ["UNSPECIFIED"],
-  }),
-  uploadOne("picture"),
-  createUserProfile,
+  createProfile,
 );
 
 export { profileRouter };
