@@ -112,7 +112,9 @@ const toggleOrderStatusParamsSchema = zod.object({
 const toggleOrderStatusBodySchema = zod.object({
   status: zod.enum(
     [OrderStatus.PROCESSING, OrderStatus.IN_TRANSIT, OrderStatus.DELIVERED],
-    {},
+    {
+      message: "Status must be one of 'PROCESSING', 'IN_TRANSIT', 'DELIVERED'!",
+    },
   ),
 });
 
