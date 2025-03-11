@@ -61,7 +61,7 @@ async function getOrders(request: Request, response: Response) {
 
     if (vendorId) {
       where.orderToProduct = {
-        some: {
+        every: {
           product: {
             vendorId,
           },
