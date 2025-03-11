@@ -347,4 +347,4 @@ async function createOrder(request: Request, response: Response) {
   }
 }
 
-export { getOrders, getOrder };
+export { getOrders, getOrder, createOrder };
