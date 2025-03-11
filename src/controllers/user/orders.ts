@@ -315,7 +315,7 @@ async function createOrder(request: Request, response: Response) {
       },
     });
 
-    const orderToProduct = await prisma.orderToProduct.createMany({
+    await prisma.orderToProduct.createMany({
       data: products.map((product) => {
         const productForOrder = productsForOrder.find(
           (productForOrder) => productForOrder.productId === product.id,
