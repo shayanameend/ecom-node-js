@@ -1,4 +1,4 @@
-import { UserStatus } from "@prisma/client";
+import { Role, UserStatus } from "@prisma/client";
 import * as zod from "zod";
 
 const getAdminsQuerySchema = zod.object({
@@ -100,6 +100,11 @@ const updateAdminBodySchema = zod.object({
   status: zod
     .enum([UserStatus.PENDING, UserStatus.REJECTED, UserStatus.APPROVED], {
       message: "Status must be one of 'PENDING', 'REJECTED', 'APPROVED'!",
+    })
+    .optional(),
+  role: zod
+    .enum([Role.SUPER_ADMIN, Role.ADMIN], {
+      message: "Role must be one of 'SUPER_ADMIN', 'ADMIN'!",
     })
     .optional(),
   isDeleted: zod
