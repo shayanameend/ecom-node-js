@@ -116,9 +116,13 @@ async function getOrders(request: Request, response: Response) {
       },
     });
 
+    const total = await prisma.order.count({ where });
+    const pages = Math.ceil(total / limit);
+
     return response.success(
       {
         data: { orders },
+        meta: { total, pages, limit, page },
       },
       {
         message: "Orders fetched successfully!",
