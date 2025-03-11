@@ -80,7 +80,7 @@ async function getProducts(request: Request, response: Response) {
       take: limit,
       skip: (page - 1) * limit,
       orderBy: {
-        ...(sort === "POPULARITY" && {
+        ...(sort === "RELEVANCE" && {
           orderToProduct: { _count: "desc" },
         }),
         ...(sort === "LATEST" && { createdAt: "desc" }),

@@ -24,8 +24,8 @@ const getProductsQuerySchema = zod.object({
     })
     .default(10),
   sort: zod
-    .enum(["POPULARITY", "LATEST", "OLDEST"], {
-      message: "Sort must be one of 'POPULARITY', 'LATEST', 'OLDEST'!",
+    .enum(["RELEVANCE", "LATEST", "OLDEST"], {
+      message: "Sort must be one of 'RELEVANCE', 'LATEST', 'OLDEST'!",
     })
     .optional(),
   name: zod

@@ -2,7 +2,6 @@ import { Router } from "express";
 
 import { authRouter } from "~/routers/public/auth";
 import { categoriesRouter } from "~/routers/public/categories";
-import { ordersRouter } from "~/routers/public/orders";
 import { productsRouter } from "~/routers/public/products";
 import { profileRouter } from "~/routers/public/profile";
 import { reviewsRouter } from "~/routers/public/reviews";
@@ -15,7 +14,6 @@ publicRouter.use("/profile", profileRouter);
 publicRouter.use("/categories", categoriesRouter);
 publicRouter.use("/vendors", vendorsRouter);
 publicRouter.use("/products", productsRouter);
-publicRouter.use("/orders", ordersRouter);
 publicRouter.use("/reviews", reviewsRouter);
 
 export { publicRouter };

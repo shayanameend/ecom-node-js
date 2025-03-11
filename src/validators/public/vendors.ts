@@ -1,6 +1,6 @@
 import * as zod from "zod";
 
-const getProductsQuerySchema = zod.object({
+const getVendorsQuerySchema = zod.object({
   page: zod.coerce
     .number({
       message: "Page must be a number!",
@@ -36,31 +36,12 @@ const getProductsQuerySchema = zod.object({
       message: "Name must be at least 1 characters long!",
     })
     .optional(),
-  minStock: zod.coerce
-    .number({
-      message: "Stock must be a number!",
-    })
-    .int({
-      message: "Stock must be an integer!",
-    })
-    .min(0, {
-      message: "Stock must be a non-negative number!",
-    })
-    .optional(),
-  minPrice: zod.coerce
-    .number({
-      message: "Min Price must be a number!",
+  city: zod
+    .string({
+      message: "City must be a string!",
     })
     .min(1, {
-      message: "Min Price must be a positive number!",
-    })
-    .optional(),
-  maxPrice: zod.coerce
-    .number({
-      message: "Max Price must be a number!",
-    })
-    .min(1, {
-      message: "Max Price must be a positive number!",
+      message: "City must be at least 1 characters long!",
     })
     .optional(),
   categoryId: zod
@@ -71,24 +52,6 @@ const getProductsQuerySchema = zod.object({
       message: "Category ID must be a 24-character string!",
     })
     .optional(),
-  vendorId: zod
-    .string({
-      message: "Vendor ID must be a string!",
-    })
-    .length(24, {
-      message: "Vendor ID must be a 24-character string!",
-    })
-    .optional(),
 });
 
-const getProductParamsSchema = zod.object({
-  id: zod
-    .string({
-      message: "ID must be a string!",
-    })
-    .length(24, {
-      message: "ID must be a 24-character string!",
-    }),
-});
-
-export { getProductsQuerySchema, getProductParamsSchema };
+export { getVendorsQuerySchema };
