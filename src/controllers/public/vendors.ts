@@ -1,9 +1,13 @@
 import type { Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
 
-import { handleErrors } from "~/lib/error";
+import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
-import { getVendorsQuerySchema } from "~/validators/public/vendors";
+import {
+  getVendorParamsSchema,
+  getVendorQuerySchema,
+  getVendorsQuerySchema,
+} from "~/validators/public/vendors";
 
 async function getVendors(request: Request, response: Response) {
   try {
@@ -85,4 +89,112 @@ async function getVendors(request: Request, response: Response) {
   }
 }
 
-export { getVendors };
+async function getVendor(request: Request, response: Response) {
+  try {
+    const { id } = getVendorParamsSchema.parse(request.params);
+    const {
+      page,
+      limit,
+      sort,
+      name,
+      minStock,
+      minPrice,
+      maxPrice,
+      categoryId,
+    } = getVendorQuerySchema.parse(request.query);
+
+    const where: Prisma.ProductWhereInput = {
+      isDeleted: false,
+      category: { status: "APPROVED", isDeleted: false },
+    };
+
+    if (name) {
+      where.name = {
+        contains: name,
+        mode: "insensitive",
+      };
+    }
+
+    if (minStock !== undefined) {
+      where.stock = {
+        gte: minStock,
+      };
+    }
+
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      where.price = {
+        gte: minPrice,
+        lte: maxPrice,
+      };
+    }
+
+    if (minPrice !== undefined) {
+      where.price = {
+        gte: minPrice,
+      };
+    }
+
+    if (maxPrice !== undefined) {
+      where.price = {
+        lte: maxPrice,
+      };
+    }
+
+    if (categoryId) {
+      where.categoryId = categoryId;
+    }
+
+    const vendor = await prisma.vendor.findUnique({
+      where: {
+        id,
+        auth: {
+          status: "APPROVED",
+          role: "VENDOR",
+          isVerified: true,
+          isDeleted: false,
+        },
+      },
+      select: {
+        id: true,
+        pictureId: true,
+        name: true,
+        description: true,
+        postalCode: true,
+        phone: true,
+        city: true,
+        pickupAddress: true,
+        products: {
+          where,
+          take: limit,
+          skip: (page - 1) * limit,
+          orderBy: {
+            ...(sort === "RELEVANCE" && {
+              orderToProduct: { _count: "desc" },
+            }),
+            ...(sort === "LATEST" && { createdAt: "desc" }),
+            ...(sort === "OLDEST" && { createdAt: "asc" }),
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!vendor) {
+      throw new NotFoundResponse("Vendor not found!");
+    }
+
+    return response.success(
+      {
+        data: { vendor },
+      },
+      {
+        message: "Vendor fetched successfully!",
+      },
+    );
+  } catch (error) {
+    handleErrors({ response, error });
+  }
+}
+
+export { getVendors, getVendor };
