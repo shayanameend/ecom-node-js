@@ -1,13 +1,13 @@
 import { Router } from "express";
 
+import { getOrder, getOrders } from "~/controllers/user/orders";
+
 const ordersRouter = Router();
 
-ordersRouter.get("/");
+ordersRouter.get("/", getOrders);
 
-ordersRouter.get("/:id");
+ordersRouter.get("/:id", getOrder);
 
 ordersRouter.post("/");
-
-ordersRouter.put("/:id");
 
 export { ordersRouter };
