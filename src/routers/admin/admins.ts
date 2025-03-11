@@ -1,11 +1,13 @@
 import { Router } from "express";
 
+import { getAdmin, getAdmins, updateAdmin } from "~/controllers/admin/admins";
+
 const adminsRouter = Router();
 
-adminsRouter.get("/");
+adminsRouter.get("/", getAdmins);
 
-adminsRouter.get("/:id");
+adminsRouter.get("/:id", getAdmin);
 
-adminsRouter.put("/:id");
+adminsRouter.put("/:id", updateAdmin);
 
 export { adminsRouter };

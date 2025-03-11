@@ -6,8 +6,8 @@ import { reviewsRouter } from "~/routers/user/reviews";
 
 const userRouter = Router();
 
-userRouter.use("/profile", profileRouter);
 userRouter.use("/orders", ordersRouter);
+userRouter.use("/profile", profileRouter);
 userRouter.use("/reviews", reviewsRouter);
 
 export { userRouter };

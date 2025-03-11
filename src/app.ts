@@ -7,6 +7,7 @@ import morgan from "morgan";
 import { verifyRequest } from "~/middlewares/auth";
 import { expandResponse } from "~/middlewares/response";
 import { adminRouter } from "~/routers/admin";
+import { adminsRouter } from "~/routers/admin/admins";
 import { publicRouter } from "~/routers/public";
 import { userRouter } from "~/routers/user";
 import { vendorRouter } from "~/routers/vendor";
@@ -20,6 +21,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(expandResponse);
 
 app.use("/", publicRouter);
+
+app.use(
+  "admin/admins",
+  verifyRequest({
+    isVerified: true,
+    isDeleted: false,
+    allowedTypes: ["ACCESS"],
+    allowedRoles: ["SUPER_ADMIN"],
+  }),
+  adminsRouter,
+);
+
 app.use(
   "/admin",
   verifyRequest({

@@ -6,8 +6,8 @@ import { prisma } from "~/lib/prisma";
 import {
   getUserParamsSchema,
   getUsersQuerySchema,
-  updateUserParamsSchema,
   updateUserBodySchema,
+  updateUserParamsSchema,
 } from "~/validators/admin/users";
 
 async function getUsers(request: Request, response: Response) {

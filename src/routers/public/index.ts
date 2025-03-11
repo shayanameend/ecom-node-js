@@ -10,10 +10,10 @@ import { vendorsRouter } from "~/routers/public/vendors";
 const publicRouter = Router();
 
 publicRouter.use("/auth", authRouter);
-publicRouter.use("/profile", profileRouter);
 publicRouter.use("/categories", categoriesRouter);
-publicRouter.use("/vendors", vendorsRouter);
 publicRouter.use("/products", productsRouter);
+publicRouter.use("/profile", profileRouter);
 publicRouter.use("/reviews", reviewsRouter);
+publicRouter.use("/vendors", vendorsRouter);
 
 export { publicRouter };

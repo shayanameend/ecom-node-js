@@ -4,13 +4,13 @@ import type { Request, Response } from "express";
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import {
-  getVendorParamsSchema,
-  getVendorsQuerySchema,
-  updateVendorBodySchema,
-  updateVendorParamsSchema,
-} from "~/validators/admin/vendors";
+  getAdminParamsSchema,
+  getAdminsQuerySchema,
+  updateAdminBodySchema,
+  updateAdminParamsSchema,
+} from "~/validators/admin/admins";
 
-async function getVendors(request: Request, response: Response) {
+async function getAdmins(request: Request, response: Response) {
   try {
     const {
       page,
@@ -19,15 +19,12 @@ async function getVendors(request: Request, response: Response) {
       email,
       name,
       phone,
-      postalCode,
-      city,
-      pickupAddress,
       status,
       isVerified,
       isDeleted,
-    } = getVendorsQuerySchema.parse(request.query);
+    } = getAdminsQuerySchema.parse(request.query);
 
-    const where: Prisma.VendorWhereInput = {};
+    const where: Prisma.AdminWhereInput = {};
 
     if (email) {
       where.auth = {
@@ -52,27 +49,6 @@ async function getVendors(request: Request, response: Response) {
       };
     }
 
-    if (postalCode) {
-      where.postalCode = {
-        contains: postalCode,
-        mode: "insensitive",
-      };
-    }
-
-    if (city) {
-      where.city = {
-        contains: city,
-        mode: "insensitive",
-      };
-    }
-
-    if (pickupAddress) {
-      where.pickupAddress = {
-        contains: pickupAddress,
-        mode: "insensitive",
-      };
-    }
-
     if (status) {
       where.auth = {
         status,
@@ -91,7 +67,7 @@ async function getVendors(request: Request, response: Response) {
       };
     }
 
-    const vendors = await prisma.vendor.findMany({
+    const admins = await prisma.admin.findMany({
       where,
       take: limit,
       skip: (page - 1) * limit,
@@ -121,16 +97,16 @@ async function getVendors(request: Request, response: Response) {
       },
     });
 
-    const total = await prisma.vendor.count({ where });
+    const total = await prisma.admin.count({ where });
     const pages = Math.ceil(total / limit);
 
     return response.success(
       {
-        data: { vendors },
+        data: { admins },
         meta: { total, pages, limit, page },
       },
       {
-        message: "Vendors fetched successfully!",
+        message: "Admins fetched successfully!",
       },
     );
   } catch (error) {
@@ -138,11 +114,11 @@ async function getVendors(request: Request, response: Response) {
   }
 }
 
-async function getVendor(request: Request, response: Response) {
+async function getAdmin(request: Request, response: Response) {
   try {
-    const { id } = getVendorParamsSchema.parse(request.params);
+    const { id } = getAdminParamsSchema.parse(request.params);
 
-    const vendor = await prisma.vendor.findUnique({
+    const admin = await prisma.admin.findUnique({
       where: { id },
       select: {
         id: true,
@@ -166,16 +142,16 @@ async function getVendor(request: Request, response: Response) {
       },
     });
 
-    if (!vendor) {
-      throw new NotFoundResponse("Vendor not found!");
+    if (!admin) {
+      throw new NotFoundResponse("Admin not found!");
     }
 
     return response.success(
       {
-        data: { vendor },
+        data: { admin },
       },
       {
-        message: "Vendor fetched successfully!",
+        message: "Admin fetched successfully!",
       },
     );
   } catch (error) {
@@ -183,12 +159,12 @@ async function getVendor(request: Request, response: Response) {
   }
 }
 
-async function updateVendor(request: Request, response: Response) {
+async function updateAdmin(request: Request, response: Response) {
   try {
-    const { id } = updateVendorParamsSchema.parse(request.params);
-    const validatedData = updateVendorBodySchema.parse(request.body);
+    const { id } = updateAdminParamsSchema.parse(request.params);
+    const validatedData = updateAdminBodySchema.parse(request.body);
 
-    const vendor = await prisma.vendor.update({
+    const admin = await prisma.admin.update({
       where: { id },
       data: {
         auth: {
@@ -217,16 +193,16 @@ async function updateVendor(request: Request, response: Response) {
       },
     });
 
-    if (!vendor) {
-      throw new NotFoundResponse("Vendor not found!");
+    if (!admin) {
+      throw new NotFoundResponse("Admin not found!");
     }
 
     return response.success(
       {
-        data: { vendor },
+        data: { admin },
       },
       {
-        message: "Vendor updated successfully!",
+        message: "Admin updated successfully!",
       },
     );
   } catch (error) {
@@ -234,4 +210,4 @@ async function updateVendor(request: Request, response: Response) {
   }
 }
 
-export { getVendors, getVendor, updateVendor };
+export { getAdmins, getAdmin, updateAdmin };

@@ -8,10 +8,10 @@ import { usersRouter } from "~/routers/vendor/users";
 
 const vendorRouter = Router();
 
-vendorRouter.use("/profile", profileRouter);
 vendorRouter.use("/categories", categoriesRouter);
-vendorRouter.use("/users", usersRouter);
-vendorRouter.use("/products", productsRouter);
 vendorRouter.use("/orders", ordersRouter);
+vendorRouter.use("/products", productsRouter);
+vendorRouter.use("/profile", profileRouter);
+vendorRouter.use("/users", usersRouter);
 
 export { vendorRouter };
