@@ -11,7 +11,7 @@ const createReviewParamsSchema = zod.object({
 });
 
 const createReviewBodySchema = zod.object({
-  rating: zod
+  rating: zod.coerce
     .number({
       message: "Rating must be a number!",
     })

@@ -23,7 +23,7 @@ app.use(expandResponse);
 app.use("/", publicRouter);
 
 app.use(
-  "admin/admins",
+  "/admin/admins",
   verifyRequest({
     isVerified: true,
     isDeleted: false,
