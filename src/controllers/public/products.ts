@@ -6,7 +6,7 @@ import { prisma } from "~/lib/prisma";
 import {
   getProductParamsSchema,
   getProductsQuerySchema,
-} from "~/validators/public/product";
+} from "~/validators/public/products";
 
 async function getProducts(request: Request, response: Response) {
   try {
