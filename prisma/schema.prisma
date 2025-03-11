@@ -160,8 +160,9 @@ model Product {
 enum OrderStatus {
   PENDING
   REJECTED
-  APPROVED
   CANCELLED
+  RETURNED
+  APPROVED
   PROCESSING
   IN_TRANSIT
   DELIVERED
@@ -170,6 +171,7 @@ enum OrderStatus {
 model Order {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
+  price  Float
   status OrderStatus @default(PENDING)
 
   orderToProduct OrderToProduct[]
@@ -203,7 +205,7 @@ model OrderToProduct {
 model Shipping {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  isDeleted Boolean @default(false) @map("is_deleted")
+  price Float
 
   orderId String @unique @map("order_id") @db.ObjectId
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -215,9 +217,8 @@ model Shipping {
 model Review {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  rating    Int
-  comment   String
-  isDeleted Boolean @default(false) @map("is_deleted")
+  rating  Int
+  comment String
 
   productId String         @unique @map("product_id") @db.ObjectId
   product   OrderToProduct @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
