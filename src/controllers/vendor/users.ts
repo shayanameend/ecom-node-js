@@ -22,11 +22,43 @@ async function getUsers(request: Request, response: Response) {
       deliveryAddress,
     } = getUsersQuerySchema.parse(request.query);
 
+    const vendor = await prisma.vendor.findUnique({
+      where: {
+        authId: request.user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!vendor) {
+      return response.success(
+        {
+          data: { users: [] },
+          meta: { total: 0, pages: 0, limit, page },
+        },
+        {
+          message: "Users fetched successfully!",
+        },
+      );
+    }
+
     const where: Prisma.UserWhereInput = {
       auth: {
         status: "APPROVED",
         isVerified: true,
         isDeleted: false,
+      },
+      orders: {
+        some: {
+          orderToProduct: {
+            some: {
+              product: {
+                vendorId: vendor.id,
+              },
+            },
+          },
+        },
       },
     };
 
@@ -132,6 +164,17 @@ async function getUser(request: Request, response: Response) {
           status: "APPROVED",
           isVerified: true,
           isDeleted: false,
+        },
+        orders: {
+          some: {
+            orderToProduct: {
+              some: {
+                product: {
+                  vendorId: request.user.id,
+                },
+              },
+            },
+          },
         },
       },
       select: {
