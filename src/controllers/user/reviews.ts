@@ -23,9 +23,25 @@ async function createReview(request: Request, response: Response) {
       throw new BadResponse("Failed to create review!");
     }
 
+    const review = await prisma.review.create({
+      data: {
+        ...validatedData,
+        order: {
+          connect: {
+            id: orderId,
+          },
+        },
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    });
+
     return response.success(
       {
-        data: {},
+        data: { review },
       },
       {
         message: "Review created successfully!",
