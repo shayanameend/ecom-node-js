@@ -28,7 +28,6 @@ async function getProducts(request: Request, response: Response) {
       vendor: {
         auth: {
           status: "APPROVED",
-          role: "VENDOR",
           isVerified: true,
           isDeleted: false,
         },
@@ -132,7 +131,6 @@ async function getProduct(request: Request, response: Response) {
         vendor: {
           auth: {
             status: "APPROVED",
-            role: "VENDOR",
             isVerified: true,
             isDeleted: false,
           },

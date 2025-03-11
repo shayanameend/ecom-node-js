@@ -17,7 +17,6 @@ async function getVendors(request: Request, response: Response) {
     const where: Prisma.VendorWhereInput = {
       auth: {
         status: "APPROVED",
-        role: "VENDOR",
         isVerified: true,
         isDeleted: false,
       },
@@ -149,7 +148,6 @@ async function getVendor(request: Request, response: Response) {
         id,
         auth: {
           status: "APPROVED",
-          role: "VENDOR",
           isVerified: true,
           isDeleted: false,
         },
