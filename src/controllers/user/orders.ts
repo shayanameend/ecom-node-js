@@ -279,55 +279,66 @@ async function createOrder(request: Request, response: Response) {
       return totalPrice + (productForOrder?.quantity || 1) * product.price;
     }, 0);
 
-    const order = await prisma.order.create({
-      data: {
-        userId: user.id,
-        price: totalPrice,
-      },
-      select: {
-        id: true,
-        price: true,
-        status: true,
-        orderToProduct: {
-          select: {
-            id: true,
-            price: true,
-            quantity: true,
-            createdAt: true,
-            updatedAt: true,
-          },
+    const order = await prisma.$transaction(async (tx) => {
+      const newOrder = await tx.order.create({
+        data: {
+          userId: user.id,
+          price: totalPrice,
         },
-        user: {
-          select: {
-            id: true,
-            pictureId: true,
-            name: true,
-            phone: true,
-            postalCode: true,
-            city: true,
-            deliveryAddress: true,
-            createdAt: true,
-            updatedAt: true,
+        select: {
+          id: true,
+          price: true,
+          status: true,
+          orderToProduct: {
+            select: {
+              id: true,
+              price: true,
+              quantity: true,
+              createdAt: true,
+              updatedAt: true,
+            },
           },
+          user: {
+            select: {
+              id: true,
+              pictureId: true,
+              name: true,
+              phone: true,
+              postalCode: true,
+              city: true,
+              deliveryAddress: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          },
+          createdAt: true,
+          updatedAt: true,
         },
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+      });
 
-    await prisma.orderToProduct.createMany({
-      data: products.map((product) => {
-        const productForOrder = productsForOrder.find(
-          (productForOrder) => productForOrder.productId === product.id,
-        );
+      await tx.orderToProduct.createMany({
+        data: products.map((product) => {
+          const productForOrder = productsForOrder.find(
+            (productForOrder) => productForOrder.productId === product.id,
+          );
 
-        return {
-          orderId: order.id,
-          productId: product.id,
-          price: product.price,
-          quantity: productForOrder?.quantity || 1,
-        };
-      }),
+          return {
+            orderId: newOrder.id,
+            productId: product.id,
+            price: product.price,
+            quantity: productForOrder?.quantity || 1,
+          };
+        }),
+      });
+
+      for (const productForOrder of productsForOrder) {
+        await tx.product.update({
+          where: { id: productForOrder.productId },
+          data: { stock: { decrement: productForOrder.quantity } },
+        });
+      }
+
+      return newOrder;
     });
 
     if (!order) {
