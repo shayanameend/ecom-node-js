@@ -14,19 +14,23 @@ async function getReviews(request: Request, response: Response) {
     const { page, limit, sort } = getReviewsQuerySchema.parse(request.query);
 
     const where: Prisma.ReviewWhereInput = {
-      product: {
-        product: {
-          id: productId,
-          isDeleted: false,
-          category: {
-            status: "APPROVED",
-            isDeleted: false,
-          },
-          vendor: {
-            auth: {
-              status: "APPROVED",
-              isVerified: true,
+      order: {
+        orderToProduct: {
+          some: {
+            product: {
+              id: productId,
               isDeleted: false,
+              category: {
+                status: "APPROVED",
+                isDeleted: false,
+              },
+              vendor: {
+                auth: {
+                  status: "APPROVED",
+                  isVerified: true,
+                  isDeleted: false,
+                },
+              },
             },
           },
         },
