@@ -110,7 +110,10 @@ const toggleOrderStatusParamsSchema = zod.object({
 });
 
 const toggleOrderStatusBodySchema = zod.object({
-  status: zod.enum([OrderStatus.PROCESSING, OrderStatus.IN_TRANSIT], {}),
+  status: zod.enum(
+    [OrderStatus.PROCESSING, OrderStatus.IN_TRANSIT, OrderStatus.DELIVERED],
+    {},
+  ),
 });
 
 export {

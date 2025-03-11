@@ -194,15 +194,7 @@ async function toggleOrderStatus(request: Request, response: Response) {
       where: {
         id,
         status: {
-          notIn: [
-            "PENDING",
-            "REJECTED",
-            "CANCELLED",
-            "RETURNED",
-            "PROCESSING",
-            "IN_TRANSIT",
-            "DELIVERED",
-          ],
+          notIn: ["PENDING", "REJECTED", "CANCELLED", "RETURNED"],
         },
       },
       data: {
