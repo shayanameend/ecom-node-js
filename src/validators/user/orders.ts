@@ -99,4 +99,28 @@ const getOrderParamsSchema = zod.object({
     }),
 });
 
-export { getOrdersQuerySchema, getOrderParamsSchema };
+const createOrderBodySchema = zod.object({
+  products: zod.array(
+    zod.object({
+      productId: zod
+        .string({
+          message: "Product ID must be a string!",
+        })
+        .length(24, {
+          message: "Product ID must be a 24-character string!",
+        }),
+      quantity: zod
+        .number({
+          message: "Quantity must be a number!",
+        })
+        .int({
+          message: "Quantity must be an integer!",
+        })
+        .min(1, {
+          message: "Quantity must be a positive number!",
+        }),
+    }),
+  ),
+});
+
+export { getOrdersQuerySchema, getOrderParamsSchema, createOrderBodySchema };

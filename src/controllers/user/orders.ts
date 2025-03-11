@@ -1,9 +1,10 @@
 import type { Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
 
-import { NotFoundResponse, handleErrors } from "~/lib/error";
+import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import {
+  createOrderBodySchema,
   getOrderParamsSchema,
   getOrdersQuerySchema,
 } from "~/validators/user/orders";
@@ -201,6 +202,144 @@ async function getOrder(request: Request, response: Response) {
       },
       {
         message: "Order fetched successfully!",
+      },
+    );
+  } catch (error) {
+    handleErrors({ response, error });
+  }
+}
+
+async function createOrder(request: Request, response: Response) {
+  try {
+    const { products: productsForOrder } = createOrderBodySchema.parse(
+      request.body,
+    );
+
+    const user = await prisma.user.findUnique({
+      where: { authId: request.user.id },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!user) {
+      throw new BadResponse("Failed to toggle order status!");
+    }
+
+    const products = await prisma.product.findMany({
+      where: {
+        id: {
+          in: productsForOrder.map((product) => product.productId),
+        },
+        isDeleted: false,
+        category: {
+          isDeleted: false,
+        },
+      },
+      select: {
+        id: true,
+        pictureIds: true,
+        name: true,
+        description: true,
+        sku: true,
+        stock: true,
+        price: true,
+        salePrice: true,
+        isDeleted: true,
+        categoryId: true,
+        vendorId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (products.length !== productsForOrder.length) {
+      throw new BadResponse("Failed to create order!");
+    }
+
+    for (const productForOrder of productsForOrder) {
+      const product = products.find((p) => p.id === productForOrder.productId);
+
+      if (product && product.stock < productForOrder.quantity) {
+        throw new BadResponse("Failed to create order!");
+      }
+    }
+
+    const vendorIds = new Set(products.map((product) => product.vendorId));
+
+    if (vendorIds.size > 1) {
+      throw new BadResponse("Failed to create order!");
+    }
+
+    const totalPrice = products.reduce((totalPrice, product) => {
+      const productForOrder = productsForOrder.find(
+        (productForOrder) => productForOrder.productId === product.id,
+      );
+
+      return totalPrice + (productForOrder?.quantity || 1) * product.price;
+    }, 0);
+
+    const order = await prisma.order.create({
+      data: {
+        userId: user.id,
+        price: totalPrice,
+      },
+      select: {
+        id: true,
+        price: true,
+        status: true,
+        orderToProduct: {
+          select: {
+            id: true,
+            price: true,
+            quantity: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            pictureId: true,
+            name: true,
+            phone: true,
+            postalCode: true,
+            city: true,
+            deliveryAddress: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    const orderToProduct = await prisma.orderToProduct.createMany({
+      data: products.map((product) => {
+        const productForOrder = productsForOrder.find(
+          (productForOrder) => productForOrder.productId === product.id,
+        );
+
+        return {
+          orderId: order.id,
+          productId: product.id,
+          price: product.price,
+          quantity: productForOrder?.quantity || 1,
+        };
+      }),
+    });
+
+    if (!order) {
+      throw new BadResponse("Failed to create order!");
+    }
+
+    return response.success(
+      {
+        data: { order },
+      },
+      {
+        message: "Order created successfully!",
       },
     );
   } catch (error) {
