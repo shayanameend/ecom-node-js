@@ -1,11 +1,13 @@
 import { Router } from "express";
 
+import { getUser, getUsers, updateUser } from "~/controllers/admin/users";
+
 const usersRouter = Router();
 
-usersRouter.get("/");
+usersRouter.get("/", getUsers);
 
-usersRouter.get("/:id");
+usersRouter.get("/:id", getUser);
 
-usersRouter.put("/:id");
+usersRouter.put("/:id", updateUser);
 
 export { usersRouter };
