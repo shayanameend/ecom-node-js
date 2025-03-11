@@ -223,7 +223,7 @@ async function createOrder(request: Request, response: Response) {
     });
 
     if (!user) {
-      throw new BadResponse("Failed to toggle order status!");
+      throw new BadResponse("Failed to create order!");
     }
 
     const products = await prisma.product.findMany({
