@@ -43,6 +43,7 @@ app.use(
   }),
   adminRouter,
 );
+
 app.use(
   "/vendor",
   verifyRequest({
@@ -53,6 +54,7 @@ app.use(
   }),
   vendorRouter,
 );
+
 app.use(
   "/user",
   verifyRequest({
