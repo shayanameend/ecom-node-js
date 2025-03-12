@@ -178,6 +178,9 @@ async function getVendor(request: Request, response: Response) {
       },
     });
 
+    const total = await prisma.product.count({ where });
+    const pages = Math.ceil(total / limit);
+
     if (!vendor) {
       throw new NotFoundResponse("Vendor not found!");
     }
@@ -185,6 +188,7 @@ async function getVendor(request: Request, response: Response) {
     return response.success(
       {
         data: { vendor },
+        meta: { total, pages, limit, page },
       },
       {
         message: "Vendor fetched successfully!",
