@@ -42,13 +42,6 @@ async function getOrders(request: Request, response: Response) {
       where.status = status;
     }
 
-    if (minPrice !== undefined && maxPrice !== undefined) {
-      where.price = {
-        gte: minPrice,
-        lte: maxPrice,
-      };
-    }
-
     if (minPrice !== undefined) {
       where.price = {
         gte: minPrice,
@@ -57,6 +50,13 @@ async function getOrders(request: Request, response: Response) {
 
     if (maxPrice !== undefined) {
       where.price = {
+        lte: maxPrice,
+      };
+    }
+
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      where.price = {
+        gte: minPrice,
         lte: maxPrice,
       };
     }
