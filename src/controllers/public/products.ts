@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { publicSelector } from "~/selectors/public";
 import {
   getProductParamsSchema,
   getProductsQuerySchema,
@@ -21,6 +22,51 @@ async function getProducts(request: Request, response: Response) {
       categoryId,
       vendorId,
     } = getProductsQuerySchema.parse(request.query);
+
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId, status: "APPROVED", isDeleted: false },
+        select: { id: true },
+      });
+
+      if (!category) {
+        return response.success(
+          {
+            data: { products: [] },
+            meta: { total: 0, pages: 0, limit, page },
+          },
+          {
+            message: "Products fetched successfully!",
+          },
+        );
+      }
+    }
+
+    if (vendorId) {
+      const vendor = await prisma.vendor.findUnique({
+        where: {
+          id: vendorId,
+          auth: {
+            status: "APPROVED",
+            isVerified: true,
+            isDeleted: false,
+          },
+        },
+        select: { id: true },
+      });
+
+      if (!vendor) {
+        return response.success(
+          {
+            data: { products: [] },
+            meta: { total: 0, pages: 0, limit, page },
+          },
+          {
+            message: "Products fetched successfully!",
+          },
+        );
+      }
+    }
 
     const where: Prisma.ProductWhereInput = {
       isDeleted: false,
@@ -86,19 +132,7 @@ async function getProducts(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        id: true,
-        pictureIds: true,
-        name: true,
-        description: true,
-        sku: true,
-        stock: true,
-        price: true,
-        salePrice: true,
-        isDeleted: true,
-        categoryId: true,
-        vendorId: true,
-        createdAt: true,
-        updatedAt: true,
+        ...publicSelector.product,
       },
     });
 
@@ -137,19 +171,17 @@ async function getProduct(request: Request, response: Response) {
         },
       },
       select: {
-        id: true,
-        pictureIds: true,
-        name: true,
-        description: true,
-        sku: true,
-        stock: true,
-        price: true,
-        salePrice: true,
-        isDeleted: true,
-        categoryId: true,
-        vendorId: true,
-        createdAt: true,
-        updatedAt: true,
+        ...publicSelector.product,
+        category: {
+          select: {
+            ...publicSelector.category,
+          },
+        },
+        vendor: {
+          select: {
+            ...publicSelector.vendor,
+          },
+        },
       },
     });
 
