@@ -17,18 +17,6 @@ async function getReviews(request: Request, response: Response) {
     const product = await prisma.product.findUnique({
       where: {
         id: productId,
-        isDeleted: false,
-        category: {
-          status: "APPROVED",
-          isDeleted: false,
-        },
-        vendor: {
-          auth: {
-            status: "APPROVED",
-            isVerified: true,
-            isDeleted: false,
-          },
-        },
       },
       select: {
         id: true,
