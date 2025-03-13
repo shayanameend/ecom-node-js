@@ -4,47 +4,47 @@ import { default as zod } from "zod";
 const signUpBodySchema = zod.object({
   email: zod
     .string({
-      message: "Invalid Email",
+      message: "Email must be a string",
     })
     .email({
       message: "Invalid Email",
     }),
   password: zod
     .string({
-      message: "Invalid Password",
+      message: "Password must be a string",
     })
     .min(8, {
-      message: "Password is too short",
+      message: "Password must be at least 8 characters",
     })
     .max(32, {
-      message: "Password is too long",
+      message: "Password must be at most 32 characters",
     }),
 });
 
 const signInBodySchema = zod.object({
   email: zod
     .string({
-      message: "Invalid Email",
+      message: "Email must be a string",
     })
     .email({
       message: "Invalid Email",
     }),
   password: zod
     .string({
-      message: "Invalid Password",
+      message: "Password must be a string",
     })
     .min(8, {
-      message: "Password is too short",
+      message: "Password must be at least 8 characters",
     })
     .max(32, {
-      message: "Password is too long",
+      message: "Password must be at most 32 characters",
     }),
 });
 
 const forgotPasswordBodySchema = zod.object({
   email: zod
     .string({
-      message: "Invalid Email",
+      message: "Email must be a string",
     })
     .email({
       message: "Invalid Email",
@@ -54,7 +54,7 @@ const forgotPasswordBodySchema = zod.object({
 const resendOtpBodySchema = zod.object({
   type: zod
     .enum([OtpType.VERIFY, OtpType.RESET], {
-      message: "Invalid Type",
+      message: "Type must be one of VERIFY or RESET",
     })
     .default(OtpType.VERIFY),
 });
@@ -62,14 +62,14 @@ const resendOtpBodySchema = zod.object({
 const verifyOtpBodySchema = zod.object({
   otp: zod
     .string({
-      message: "Invalid OTP",
+      message: "OTP must be a string",
     })
     .length(6, {
       message: "Invalid OTP",
     }),
   type: zod
     .enum([OtpType.VERIFY, OtpType.RESET], {
-      message: "Invalid Type",
+      message: "Type must be one of VERIFY or RESET",
     })
     .default(OtpType.VERIFY),
 });
@@ -77,13 +77,13 @@ const verifyOtpBodySchema = zod.object({
 const updatePasswordBodySchema = zod.object({
   password: zod
     .string({
-      message: "Invalid Password",
+      message: "Password must be a string",
     })
     .min(8, {
-      message: "Password is too short",
+      message: "Password must be at least 8 characters",
     })
     .max(32, {
-      message: "Password is too long",
+      message: "Password must be at most 32 characters",
     }),
 });
 

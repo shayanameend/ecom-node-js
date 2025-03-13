@@ -181,9 +181,6 @@ async function signIn(request: Request, response: Response) {
         type: "VERIFY",
       });
 
-      // @ts-ignore
-      user.password = undefined;
-
       return response.success(
         {
           data: {
@@ -200,6 +197,9 @@ async function signIn(request: Request, response: Response) {
       email: user.email,
       type: "ACCESS",
     });
+
+    // @ts-ignore
+    user.password = undefined;
 
     return response.success(
       {
