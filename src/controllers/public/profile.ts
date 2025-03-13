@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { BadResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { publicSelector } from "~/selectors/public";
+import { vendorSelector } from "~/selectors/vendor";
 import { addFile } from "~/utils/file";
 import {
   createAdminProfileBodySchema,
@@ -101,16 +102,7 @@ async function createProfile(request: Request, response: Response) {
               },
             },
             select: {
-              id: true,
-              pictureId: true,
-              name: true,
-              description: true,
-              phone: true,
-              postalCode: true,
-              city: true,
-              pickupAddress: true,
-              createdAt: true,
-              updatedAt: true,
+              ...vendorSelector.profile,
               auth: {
                 select: {
                   ...publicSelector.auth,

@@ -3,6 +3,8 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { publicSelector } from "~/selectors/public";
+import { vendorSelector } from "~/selectors/vendor";
 import {
   getUserParamsSchema,
   getUsersQuerySchema,
@@ -115,20 +117,12 @@ async function getUsers(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
+        ...vendorSelector.user,
         auth: {
           select: {
-            id: true,
-            email: true,
-            createdAt: true,
-            updatedAt: true,
+            ...publicSelector.auth,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -187,20 +181,17 @@ async function getUser(request: Request, response: Response) {
         },
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
+        ...vendorSelector.user,
         auth: {
           select: {
-            id: true,
-            email: true,
-            createdAt: true,
-            updatedAt: true,
+            ...publicSelector.auth,
           },
         },
-        createdAt: true,
-        updatedAt: true,
+        orders: {
+          select: {
+            ...vendorSelector.order,
+          },
+        },
       },
     });
 

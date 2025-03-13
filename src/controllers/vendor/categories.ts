@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 
 import { handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { publicSelector } from "~/selectors/public";
 import { createCategoryBodySchema } from "~/validators/vendor/categories";
 
 async function createCategory(request: Request, response: Response) {
@@ -11,12 +12,7 @@ async function createCategory(request: Request, response: Response) {
     const category = await prisma.category.create({
       data: validatedData,
       select: {
-        id: true,
-        name: true,
-        status: true,
-        isDeleted: true,
-        createdAt: true,
-        updatedAt: true,
+        ...publicSelector.category,
       },
     });
 

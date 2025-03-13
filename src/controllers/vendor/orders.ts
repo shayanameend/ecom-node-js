@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { vendorSelector } from "~/selectors/vendor";
 import {
   getOrderParamsSchema,
   getOrdersQuerySchema,
@@ -102,33 +103,12 @@ async function getOrders(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        id: true,
-        price: true,
-        status: true,
-        orderToProduct: {
-          select: {
-            id: true,
-            price: true,
-            quantity: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
+        ...vendorSelector.order,
         user: {
           select: {
-            id: true,
-            pictureId: true,
-            name: true,
-            phone: true,
-            postalCode: true,
-            city: true,
-            deliveryAddress: true,
-            createdAt: true,
-            updatedAt: true,
+            ...vendorSelector.user,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -172,33 +152,12 @@ async function getOrder(request: Request, response: Response) {
         },
       },
       select: {
-        id: true,
-        price: true,
-        status: true,
-        orderToProduct: {
-          select: {
-            id: true,
-            price: true,
-            quantity: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
+        ...vendorSelector.order,
         user: {
           select: {
-            id: true,
-            pictureId: true,
-            name: true,
-            phone: true,
-            postalCode: true,
-            city: true,
-            deliveryAddress: true,
-            createdAt: true,
-            updatedAt: true,
+            ...vendorSelector.user,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -253,33 +212,12 @@ async function toggleOrderStatus(request: Request, response: Response) {
         status,
       },
       select: {
-        id: true,
-        price: true,
-        status: true,
-        orderToProduct: {
-          select: {
-            id: true,
-            price: true,
-            quantity: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
+        ...vendorSelector.order,
         user: {
           select: {
-            id: true,
-            pictureId: true,
-            name: true,
-            phone: true,
-            postalCode: true,
-            city: true,
-            deliveryAddress: true,
-            createdAt: true,
-            updatedAt: true,
+            ...vendorSelector.user,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 

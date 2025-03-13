@@ -3,6 +3,8 @@ import type { Request, Response } from "express";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { publicSelector } from "~/selectors/public";
+import { vendorSelector } from "~/selectors/vendor";
 import { addFile, removeFile } from "~/utils/file";
 import {
   createProductBodySchema,
@@ -102,19 +104,7 @@ async function getProducts(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        id: true,
-        pictureIds: true,
-        name: true,
-        description: true,
-        sku: true,
-        stock: true,
-        price: true,
-        salePrice: true,
-        isDeleted: true,
-        categoryId: true,
-        vendorId: true,
-        createdAt: true,
-        updatedAt: true,
+        ...vendorSelector.product,
       },
     });
 
@@ -153,19 +143,17 @@ async function getProduct(request: Request, response: Response) {
     const product = await prisma.product.findUnique({
       where: { id, vendorId: vendor.id },
       select: {
-        id: true,
-        pictureIds: true,
-        name: true,
-        description: true,
-        sku: true,
-        stock: true,
-        price: true,
-        salePrice: true,
-        isDeleted: true,
-        categoryId: true,
-        vendorId: true,
-        createdAt: true,
-        updatedAt: true,
+        ...vendorSelector.product,
+        category: {
+          select: {
+            ...publicSelector.category,
+          },
+        },
+        vendor: {
+          select: {
+            ...publicSelector.vendor,
+          },
+        },
       },
     });
 
@@ -216,19 +204,17 @@ async function createProduct(request: Request, response: Response) {
     const product = await prisma.product.create({
       data: { ...validatedData, pictureIds, vendorId: vendor.id },
       select: {
-        id: true,
-        pictureIds: true,
-        name: true,
-        description: true,
-        sku: true,
-        stock: true,
-        price: true,
-        salePrice: true,
-        isDeleted: true,
-        categoryId: true,
-        vendorId: true,
-        createdAt: true,
-        updatedAt: true,
+        ...vendorSelector.product,
+        category: {
+          select: {
+            ...publicSelector.category,
+          },
+        },
+        vendor: {
+          select: {
+            ...publicSelector.vendor,
+          },
+        },
       },
     });
 
@@ -278,19 +264,17 @@ async function updateProduct(request: Request, response: Response) {
       where: { id },
       data: { ...validatedData, pictureIds },
       select: {
-        id: true,
-        pictureIds: true,
-        name: true,
-        description: true,
-        sku: true,
-        stock: true,
-        price: true,
-        salePrice: true,
-        isDeleted: true,
-        categoryId: true,
-        vendorId: true,
-        createdAt: true,
-        updatedAt: true,
+        ...vendorSelector.product,
+        category: {
+          select: {
+            ...publicSelector.category,
+          },
+        },
+        vendor: {
+          select: {
+            ...publicSelector.vendor,
+          },
+        },
       },
     });
 
@@ -330,19 +314,17 @@ const deleteProduct = async (request: Request, response: Response) => {
       where: { id },
       data: { isDeleted: true },
       select: {
-        id: true,
-        pictureIds: true,
-        name: true,
-        description: true,
-        sku: true,
-        stock: true,
-        price: true,
-        salePrice: true,
-        isDeleted: true,
-        categoryId: true,
-        vendorId: true,
-        createdAt: true,
-        updatedAt: true,
+        ...vendorSelector.product,
+        category: {
+          select: {
+            ...publicSelector.category,
+          },
+        },
+        vendor: {
+          select: {
+            ...publicSelector.vendor,
+          },
+        },
       },
     });
 
