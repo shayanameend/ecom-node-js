@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 
 import { BadResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { publicSelector } from "~/selectors/public";
 import { addFile } from "~/utils/file";
 import {
   createAdminProfileBodySchema,
@@ -50,14 +51,7 @@ async function createProfile(request: Request, response: Response) {
               updatedAt: true,
               auth: {
                 select: {
-                  id: true,
-                  email: true,
-                  status: true,
-                  role: true,
-                  isVerified: true,
-                  isDeleted: true,
-                  createdAt: true,
-                  updatedAt: true,
+                  ...publicSelector.auth,
                 },
               },
             },
@@ -119,14 +113,7 @@ async function createProfile(request: Request, response: Response) {
               updatedAt: true,
               auth: {
                 select: {
-                  id: true,
-                  email: true,
-                  status: true,
-                  role: true,
-                  isVerified: true,
-                  isDeleted: true,
-                  createdAt: true,
-                  updatedAt: true,
+                  ...publicSelector.auth,
                 },
               },
             },
@@ -186,14 +173,7 @@ async function createProfile(request: Request, response: Response) {
               updatedAt: true,
               auth: {
                 select: {
-                  id: true,
-                  email: true,
-                  status: true,
-                  role: true,
-                  isVerified: true,
-                  isDeleted: true,
-                  createdAt: true,
-                  updatedAt: true,
+                  ...publicSelector.auth,
                 },
               },
             },

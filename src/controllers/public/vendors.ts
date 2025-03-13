@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { publicSelector } from "~/selectors/public";
 import {
   getVendorParamsSchema,
   getVendorQuerySchema,
@@ -77,22 +78,10 @@ async function getVendors(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        description: true,
-        postalCode: true,
-        phone: true,
-        city: true,
-        pickupAddress: true,
-        createdAt: true,
-        updatedAt: true,
+        ...publicSelector.vendor,
         auth: {
           select: {
-            id: true,
-            email: true,
-            createdAt: true,
-            updatedAt: true,
+            ...publicSelector.auth,
           },
         },
       },
@@ -191,22 +180,10 @@ async function getVendor(request: Request, response: Response) {
         },
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        description: true,
-        postalCode: true,
-        phone: true,
-        city: true,
-        pickupAddress: true,
-        createdAt: true,
-        updatedAt: true,
+        ...publicSelector.vendor,
         auth: {
           select: {
-            id: true,
-            email: true,
-            createdAt: true,
-            updatedAt: true,
+            ...publicSelector.auth,
           },
         },
         products: {
@@ -221,19 +198,7 @@ async function getVendor(request: Request, response: Response) {
             ...(sort === "OLDEST" && { createdAt: "asc" }),
           },
           select: {
-            id: true,
-            pictureIds: true,
-            name: true,
-            description: true,
-            sku: true,
-            stock: true,
-            price: true,
-            salePrice: true,
-            isDeleted: true,
-            categoryId: true,
-            vendorId: true,
-            createdAt: true,
-            updatedAt: true,
+            ...publicSelector.product,
           },
         },
       },

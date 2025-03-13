@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 
 import { handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { publicSelector } from "~/selectors/public";
 import {
   getReviewsParamsSchema,
   getReviewsQuerySchema,
@@ -46,11 +47,7 @@ async function getReviews(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        id: true,
-        rating: true,
-        comment: true,
-        createdAt: true,
-        updatedAt: true,
+        ...publicSelector.review,
       },
     });
 

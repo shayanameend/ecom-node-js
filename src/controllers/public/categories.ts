@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 
 import { handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { publicSelector } from "~/selectors/public";
 
 async function getCategories(_request: Request, response: Response) {
   try {
@@ -11,12 +12,7 @@ async function getCategories(_request: Request, response: Response) {
         isDeleted: false,
       },
       select: {
-        id: true,
-        name: true,
-        status: true,
-        isDeleted: true,
-        createdAt: true,
-        updatedAt: true,
+        ...publicSelector.category,
       },
     });
 
