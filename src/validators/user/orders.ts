@@ -123,4 +123,26 @@ const createOrderBodySchema = zod.object({
   ),
 });
 
-export { getOrdersQuerySchema, getOrderParamsSchema, createOrderBodySchema };
+const toggleOrderStatusParamsSchema = zod.object({
+  id: zod
+    .string({
+      message: "ID must be a string!",
+    })
+    .length(24, {
+      message: "ID must be a 24-character string!",
+    }),
+});
+
+const toggleOrderStatusBodySchema = zod.object({
+  status: zod.enum([OrderStatus.CANCELLED], {
+    message: "Status must be 'CANCELLED'!",
+  }),
+});
+
+export {
+  getOrdersQuerySchema,
+  getOrderParamsSchema,
+  createOrderBodySchema,
+  toggleOrderStatusParamsSchema,
+  toggleOrderStatusBodySchema,
+};

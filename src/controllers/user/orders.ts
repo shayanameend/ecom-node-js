@@ -9,6 +9,8 @@ import {
   createOrderBodySchema,
   getOrderParamsSchema,
   getOrdersQuerySchema,
+  toggleOrderStatusBodySchema,
+  toggleOrderStatusParamsSchema,
 } from "~/validators/user/orders";
 
 async function getOrders(request: Request, response: Response) {
@@ -420,4 +422,75 @@ async function createOrder(request: Request, response: Response) {
   }
 }
 
-export { getOrders, getOrder, createOrder };
+async function toggleOrderStatus(request: Request, response: Response) {
+  try {
+    const { id } = toggleOrderStatusParamsSchema.parse(request.params);
+    const { status } = toggleOrderStatusBodySchema.parse(request.body);
+
+    const user = await prisma.user.findUnique({
+      where: { authId: request.user.id },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!user) {
+      throw new BadResponse("Failed to toggle order status!");
+    }
+
+    const order = await prisma.order.update({
+      where: {
+        id,
+        user: {
+          id: user.id,
+        },
+        status: {
+          in: ["PENDING"],
+        },
+      },
+      data: {
+        status,
+      },
+      select: {
+        ...publicSelector.order,
+        orderToProduct: {
+          select: {
+            ...publicSelector.orderToProduct,
+            product: {
+              select: {
+                ...publicSelector.product,
+                category: {
+                  select: {
+                    ...publicSelector.category,
+                  },
+                },
+                vendor: {
+                  select: {
+                    ...vendorSelector.profile,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!order) {
+      throw new NotFoundResponse("Order not found!");
+    }
+
+    return response.success(
+      {
+        data: { order },
+      },
+      {
+        message: "Order status toggled successfully!",
+      },
+    );
+  } catch (error) {
+    handleErrors({ response, error });
+  }
+}
+
+export { getOrders, getOrder, createOrder, toggleOrderStatus };
