@@ -16,7 +16,7 @@ const uploadOne = (fieldName: string) => {
           message:
             err instanceof multer.MulterError
               ? err.code === "LIMIT_FILE_SIZE"
-                ? "File too large"
+                ? "File must be less than 10MB"
                 : err.message
               : err.message,
         });
@@ -35,7 +35,7 @@ const uploadMultiple = (fieldName: string, maxCount = 5) => {
           message:
             err instanceof multer.MulterError
               ? err.code === "LIMIT_FILE_SIZE"
-                ? "File too large"
+                ? "File must be less than 10MB"
                 : err.message
               : err.message,
         });
