@@ -14,10 +14,6 @@ async function createProfile(request: Request, response: Response) {
   try {
     const { role } = createProfileBodySchema.parse(request.body);
 
-    if (request.user.role !== "UNSPECIFIED") {
-      throw new BadResponse("Profile already exists!");
-    }
-
     if (!request.file) {
       throw new BadResponse("Profile picture is required!");
     }

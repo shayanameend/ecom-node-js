@@ -42,10 +42,6 @@ async function getProfile(request: Request, response: Response) {
 
 async function updateProfile(request: Request, response: Response) {
   try {
-    if (request.user.role === "UNSPECIFIED") {
-      throw new BadResponse("Profile does not exist!");
-    }
-
     if (request.body.pictureId && !request.file) {
       throw new BadResponse("Profile picture is required!");
     }
