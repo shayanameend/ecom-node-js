@@ -4,6 +4,8 @@ import type { Request, Response } from "express";
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { publicSelector } from "~/selectors/public";
+import { userSelector } from "~/selectors/user";
+import { vendorSelector } from "~/selectors/vendor";
 import {
   createOrderBodySchema,
   getOrderParamsSchema,
@@ -100,6 +102,11 @@ async function getOrders(request: Request, response: Response) {
       },
       select: {
         ...publicSelector.order,
+        orderToProduct: {
+          select: {
+            ...publicSelector.orderToProduct,
+          },
+        },
         user: {
           select: {
             ...userSelector.profile,
@@ -143,6 +150,11 @@ async function getOrder(request: Request, response: Response) {
       },
       select: {
         ...publicSelector.order,
+        orderToProduct: {
+          select: {
+            ...publicSelector.orderToProduct,
+          },
+        },
         user: {
           select: {
             ...userSelector.profile,
@@ -197,6 +209,16 @@ async function createOrder(request: Request, response: Response) {
       },
       select: {
         ...publicSelector.product,
+        category: {
+          select: {
+            ...publicSelector.category,
+          },
+        },
+        vendor: {
+          select: {
+            ...vendorSelector.profile,
+          },
+        },
       },
     });
 
@@ -212,7 +234,7 @@ async function createOrder(request: Request, response: Response) {
       }
     }
 
-    const vendorIds = new Set(products.map((product) => product.vendorId));
+    const vendorIds = new Set(products.map((product) => product.vendor.id));
 
     if (vendorIds.size > 1) {
       throw new BadResponse("Failed to create order!");
@@ -234,6 +256,11 @@ async function createOrder(request: Request, response: Response) {
         },
         select: {
           ...publicSelector.order,
+          orderToProduct: {
+            select: {
+              ...publicSelector.orderToProduct,
+            },
+          },
           user: {
             select: {
               ...userSelector.profile,

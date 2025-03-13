@@ -4,6 +4,7 @@ import type { Request, Response } from "express";
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { publicSelector } from "~/selectors/public";
+import { userSelector } from "~/selectors/user";
 import {
   getOrderParamsSchema,
   getOrdersQuerySchema,
@@ -104,6 +105,11 @@ async function getOrders(request: Request, response: Response) {
       },
       select: {
         ...publicSelector.order,
+        orderToProduct: {
+          select: {
+            ...publicSelector.orderToProduct,
+          },
+        },
         user: {
           select: {
             ...userSelector.profile,
@@ -153,6 +159,11 @@ async function getOrder(request: Request, response: Response) {
       },
       select: {
         ...publicSelector.order,
+        orderToProduct: {
+          select: {
+            ...publicSelector.orderToProduct,
+          },
+        },
         user: {
           select: {
             ...userSelector.profile,
@@ -213,6 +224,11 @@ async function toggleOrderStatus(request: Request, response: Response) {
       },
       select: {
         ...publicSelector.order,
+        orderToProduct: {
+          select: {
+            ...publicSelector.orderToProduct,
+          },
+        },
         user: {
           select: {
             ...userSelector.profile,
