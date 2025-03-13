@@ -3,6 +3,8 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { adminSelector } from "~/selectors/admin";
+import { publicSelector } from "~/selectors/public";
 import {
   getUserParamsSchema,
   getUsersQuerySchema,
@@ -100,24 +102,12 @@ async function getUsers(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
+        ...publicSelector.user,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...adminSelector.auth,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -145,24 +135,12 @@ async function getUser(request: Request, response: Response) {
     const user = await prisma.user.findUnique({
       where: { id },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
+        ...publicSelector.user,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...adminSelector.auth,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -196,24 +174,12 @@ async function updateUser(request: Request, response: Response) {
         },
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
+        ...publicSelector.user,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...adminSelector.auth,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 

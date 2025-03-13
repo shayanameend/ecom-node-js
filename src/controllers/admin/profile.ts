@@ -2,6 +2,8 @@ import type { Request, Response } from "express";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { adminSelector } from "~/selectors/admin";
+import { publicSelector } from "~/selectors/public";
 import { addFile, removeFile } from "~/utils/file";
 import { updateProfileBodySchema } from "~/validators/admin/profile";
 
@@ -12,22 +14,10 @@ async function getProfile(request: Request, response: Response) {
         authId: request.user.id,
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
-        createdAt: true,
-        updatedAt: true,
+        ...adminSelector.profile,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...publicSelector.auth,
           },
         },
       },
@@ -88,22 +78,10 @@ async function updateProfile(request: Request, response: Response) {
         phone,
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
-        createdAt: true,
-        updatedAt: true,
+        ...adminSelector.profile,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...publicSelector.auth,
           },
         },
       },

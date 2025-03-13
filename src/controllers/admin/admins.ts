@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { adminSelector } from "~/selectors/admin";
 import {
   getAdminParamsSchema,
   getAdminsQuerySchema,
@@ -76,24 +77,12 @@ async function getAdmins(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
+        ...adminSelector.profile,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...adminSelector.auth,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -121,24 +110,12 @@ async function getAdmin(request: Request, response: Response) {
     const admin = await prisma.admin.findUnique({
       where: { id },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
+        ...adminSelector.profile,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...adminSelector.auth,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -172,24 +149,12 @@ async function updateAdmin(request: Request, response: Response) {
         },
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        phone: true,
+        ...adminSelector.profile,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...adminSelector.auth,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 

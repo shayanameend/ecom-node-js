@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 
 import { BadResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { adminSelector } from "~/selectors/admin";
 import { publicSelector } from "~/selectors/public";
 import { userSelector } from "~/selectors/user";
 import { vendorSelector } from "~/selectors/vendor";
@@ -45,12 +46,7 @@ async function createProfile(request: Request, response: Response) {
               },
             },
             select: {
-              id: true,
-              pictureId: true,
-              name: true,
-              phone: true,
-              createdAt: true,
-              updatedAt: true,
+              ...adminSelector.profile,
               auth: {
                 select: {
                   ...publicSelector.auth,

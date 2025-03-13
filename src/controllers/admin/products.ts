@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { vendorSelector } from "~/selectors/vendor";
 import { sendMessage } from "~/utils/mail";
 import {
   getProductParamsSchema,
@@ -84,19 +85,7 @@ async function getProducts(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        id: true,
-        pictureIds: true,
-        name: true,
-        description: true,
-        sku: true,
-        stock: true,
-        price: true,
-        salePrice: true,
-        isDeleted: true,
-        categoryId: true,
-        vendorId: true,
-        createdAt: true,
-        updatedAt: true,
+        ...vendorSelector.product,
       },
     });
 
@@ -124,19 +113,7 @@ async function getProduct(request: Request, response: Response) {
     const product = await prisma.product.findUnique({
       where: { id },
       select: {
-        id: true,
-        pictureIds: true,
-        name: true,
-        description: true,
-        sku: true,
-        stock: true,
-        price: true,
-        salePrice: true,
-        isDeleted: true,
-        categoryId: true,
-        vendorId: true,
-        createdAt: true,
-        updatedAt: true,
+        ...vendorSelector.product,
       },
     });
 
@@ -166,19 +143,7 @@ async function toggleProductIsDeleted(request: Request, response: Response) {
       where: { id },
       data: validatedData,
       select: {
-        id: true,
-        pictureIds: true,
-        name: true,
-        description: true,
-        sku: true,
-        stock: true,
-        price: true,
-        salePrice: true,
-        isDeleted: true,
-        categoryId: true,
-        vendorId: true,
-        createdAt: true,
-        updatedAt: true,
+        ...vendorSelector.product,
       },
     });
 

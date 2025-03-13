@@ -3,6 +3,9 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { adminSelector } from "~/selectors/admin";
+import { publicSelector } from "~/selectors/public";
+import { vendorSelector } from "~/selectors/vendor";
 import {
   getVendorParamsSchema,
   getVendorQuerySchema,
@@ -134,26 +137,10 @@ async function getVendors(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        description: true,
-        postalCode: true,
-        phone: true,
-        city: true,
-        pickupAddress: true,
-        createdAt: true,
-        updatedAt: true,
+        ...publicSelector.vendor,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...adminSelector.auth,
           },
         },
       },
@@ -247,26 +234,10 @@ async function getVendor(request: Request, response: Response) {
     const vendor = await prisma.vendor.findUnique({
       where: { id },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        description: true,
-        postalCode: true,
-        phone: true,
-        city: true,
-        pickupAddress: true,
-        createdAt: true,
-        updatedAt: true,
+        ...publicSelector.vendor,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...adminSelector.auth,
           },
         },
         products: {
@@ -281,19 +252,7 @@ async function getVendor(request: Request, response: Response) {
             ...(sort === "OLDEST" && { createdAt: "asc" }),
           },
           select: {
-            id: true,
-            pictureIds: true,
-            name: true,
-            description: true,
-            sku: true,
-            stock: true,
-            price: true,
-            salePrice: true,
-            isDeleted: true,
-            categoryId: true,
-            vendorId: true,
-            createdAt: true,
-            updatedAt: true,
+            ...vendorSelector.product,
           },
         },
       },
@@ -329,26 +288,10 @@ async function updateVendor(request: Request, response: Response) {
         },
       },
       select: {
-        id: true,
-        pictureId: true,
-        name: true,
-        description: true,
-        postalCode: true,
-        phone: true,
-        city: true,
-        pickupAddress: true,
-        createdAt: true,
-        updatedAt: true,
+        ...publicSelector.vendor,
         auth: {
           select: {
-            id: true,
-            email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
-            createdAt: true,
-            updatedAt: true,
+            ...adminSelector.auth,
           },
         },
       },
