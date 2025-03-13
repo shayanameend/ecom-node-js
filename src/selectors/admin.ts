@@ -1,6 +1,4 @@
-import type { Prisma } from "@prisma/client";
-
-const auth: Prisma.AuthSelect = {
+const auth = {
   id: true,
   email: true,
   status: true,
@@ -11,7 +9,7 @@ const auth: Prisma.AuthSelect = {
   updatedAt: true,
 };
 
-const profile: Prisma.VendorSelect = {
+const profile = {
   id: true,
   pictureId: true,
   name: true,
@@ -20,7 +18,7 @@ const profile: Prisma.VendorSelect = {
   updatedAt: true,
 };
 
-const category: Prisma.CategorySelect = {
+const category = {
   id: true,
   name: true,
   status: true,

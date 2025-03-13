@@ -1,6 +1,4 @@
-import type { Prisma } from "@prisma/client";
-
-const profile: Prisma.VendorSelect = {
+const profile = {
   id: true,
   pictureId: true,
   name: true,
@@ -13,7 +11,7 @@ const profile: Prisma.VendorSelect = {
   updatedAt: true,
 };
 
-const product: Prisma.ProductSelect = {
+const product = {
   id: true,
   pictureIds: true,
   name: true,

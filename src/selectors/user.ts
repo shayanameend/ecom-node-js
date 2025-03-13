@@ -1,6 +1,4 @@
-import type { Prisma } from "@prisma/client";
-
-const profile: Prisma.UserSelect = {
+const profile = {
   id: true,
   pictureId: true,
   name: true,

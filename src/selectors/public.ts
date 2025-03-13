@@ -1,20 +1,18 @@
-import type { Prisma } from "@prisma/client";
-
-const auth: Prisma.AuthSelect = {
+const auth = {
   id: true,
   email: true,
   createdAt: true,
   updatedAt: true,
 };
 
-const category: Prisma.CategorySelect = {
+const category = {
   id: true,
   name: true,
   createdAt: true,
   updatedAt: true,
 };
 
-const vendor: Prisma.VendorSelect = {
+const vendor = {
   id: true,
   pictureId: true,
   name: true,
@@ -27,7 +25,7 @@ const vendor: Prisma.VendorSelect = {
   updatedAt: true,
 };
 
-const product: Prisma.ProductSelect = {
+const product = {
   id: true,
   pictureIds: true,
   name: true,
@@ -40,7 +38,7 @@ const product: Prisma.ProductSelect = {
   updatedAt: true,
 };
 
-const order: Prisma.OrderSelect = {
+const order = {
   id: true,
   price: true,
   status: true,
@@ -55,7 +53,7 @@ const order: Prisma.OrderSelect = {
   },
 };
 
-const user: Prisma.UserSelect = {
+const user = {
   id: true,
   pictureId: true,
   name: true,
@@ -67,7 +65,7 @@ const user: Prisma.UserSelect = {
   updatedAt: true,
 };
 
-const review: Prisma.ReviewSelect = {
+const review = {
   id: true,
   rating: true,
   comment: true,
