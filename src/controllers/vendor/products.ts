@@ -170,7 +170,7 @@ async function getProduct(request: Request, response: Response) {
         },
         vendor: {
           select: {
-            ...publicSelector.vendor,
+            ...vendorSelector.profile,
           },
         },
       },
@@ -248,7 +248,7 @@ async function createProduct(request: Request, response: Response) {
         },
         vendor: {
           select: {
-            ...publicSelector.vendor,
+            ...vendorSelector.profile,
           },
         },
       },
@@ -336,7 +336,7 @@ async function updateProduct(request: Request, response: Response) {
         },
         vendor: {
           select: {
-            ...publicSelector.vendor,
+            ...vendorSelector.profile,
           },
         },
       },
@@ -386,7 +386,7 @@ const deleteProduct = async (request: Request, response: Response) => {
         },
         vendor: {
           select: {
-            ...publicSelector.vendor,
+            ...vendorSelector.profile,
           },
         },
       },

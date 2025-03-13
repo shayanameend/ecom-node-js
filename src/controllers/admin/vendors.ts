@@ -137,7 +137,7 @@ async function getVendors(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        ...publicSelector.vendor,
+        ...vendorSelector.profile,
         auth: {
           select: {
             ...adminSelector.auth,
@@ -234,7 +234,7 @@ async function getVendor(request: Request, response: Response) {
     const vendor = await prisma.vendor.findUnique({
       where: { id },
       select: {
-        ...publicSelector.vendor,
+        ...vendorSelector.profile,
         auth: {
           select: {
             ...adminSelector.auth,
@@ -288,7 +288,7 @@ async function updateVendor(request: Request, response: Response) {
         },
       },
       select: {
-        ...publicSelector.vendor,
+        ...vendorSelector.profile,
         auth: {
           select: {
             ...adminSelector.auth,

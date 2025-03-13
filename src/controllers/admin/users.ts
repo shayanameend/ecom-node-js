@@ -102,7 +102,7 @@ async function getUsers(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        ...publicSelector.user,
+        ...userSelector.profile,
         auth: {
           select: {
             ...adminSelector.auth,
@@ -135,7 +135,7 @@ async function getUser(request: Request, response: Response) {
     const user = await prisma.user.findUnique({
       where: { id },
       select: {
-        ...publicSelector.user,
+        ...userSelector.profile,
         auth: {
           select: {
             ...adminSelector.auth,
@@ -174,7 +174,7 @@ async function updateUser(request: Request, response: Response) {
         },
       },
       select: {
-        ...publicSelector.user,
+        ...userSelector.profile,
         auth: {
           select: {
             ...adminSelector.auth,

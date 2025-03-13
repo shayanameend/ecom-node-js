@@ -116,7 +116,7 @@ async function getUsers(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        ...publicSelector.user,
+        ...userSelector.profile,
         auth: {
           select: {
             ...publicSelector.auth,
@@ -180,7 +180,7 @@ async function getUser(request: Request, response: Response) {
         },
       },
       select: {
-        ...publicSelector.user,
+        ...userSelector.profile,
         auth: {
           select: {
             ...publicSelector.auth,

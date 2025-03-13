@@ -12,19 +12,6 @@ const category = {
   updatedAt: true,
 };
 
-const vendor = {
-  id: true,
-  pictureId: true,
-  name: true,
-  description: true,
-  postalCode: true,
-  phone: true,
-  city: true,
-  pickupAddress: true,
-  createdAt: true,
-  updatedAt: true,
-};
-
 const product = {
   id: true,
   pictureIds: true,
@@ -53,18 +40,6 @@ const order = {
   },
 };
 
-const user = {
-  id: true,
-  pictureId: true,
-  name: true,
-  postalCode: true,
-  phone: true,
-  city: true,
-  deliveryAddress: true,
-  createdAt: true,
-  updatedAt: true,
-};
-
 const review = {
   id: true,
   rating: true,
@@ -76,9 +51,7 @@ const review = {
 export const publicSelector = {
   auth,
   category,
-  vendor,
   product,
   order,
-  user,
   review,
 };

@@ -90,7 +90,7 @@ async function getOrders(request: Request, response: Response) {
         ...publicSelector.order,
         user: {
           select: {
-            ...publicSelector.user,
+            ...userSelector.profile,
           },
         },
       },
@@ -125,7 +125,7 @@ async function getOrder(request: Request, response: Response) {
         ...publicSelector.order,
         user: {
           select: {
-            ...publicSelector.user,
+            ...userSelector.profile,
           },
         },
       },
@@ -167,7 +167,7 @@ async function toggleOrderStatus(request: Request, response: Response) {
         ...publicSelector.order,
         user: {
           select: {
-            ...publicSelector.user,
+            ...userSelector.profile,
           },
         },
       },

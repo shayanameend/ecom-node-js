@@ -161,7 +161,7 @@ async function getProduct(request: Request, response: Response) {
         },
         vendor: {
           select: {
-            ...publicSelector.vendor,
+            ...vendorSelector.profile,
           },
         },
       },
@@ -201,7 +201,7 @@ async function toggleProductIsDeleted(request: Request, response: Response) {
         },
         vendor: {
           select: {
-            ...publicSelector.vendor,
+            ...vendorSelector.profile,
           },
         },
       },

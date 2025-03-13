@@ -78,7 +78,7 @@ async function getVendors(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        ...publicSelector.vendor,
+        ...vendorSelector.profile,
         auth: {
           select: {
             ...publicSelector.auth,
@@ -180,7 +180,7 @@ async function getVendor(request: Request, response: Response) {
         },
       },
       select: {
-        ...publicSelector.vendor,
+        ...vendorSelector.profile,
         auth: {
           select: {
             ...publicSelector.auth,
