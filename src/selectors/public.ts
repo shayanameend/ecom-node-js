@@ -29,15 +29,14 @@ const order = {
   id: true,
   price: true,
   status: true,
-  orderToProduct: {
-    select: {
-      id: true,
-      price: true,
-      quantity: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  },
+};
+
+const orderToProduct = {
+  id: true,
+  price: true,
+  quantity: true,
+  createdAt: true,
+  updatedAt: true,
 };
 
 const review = {
@@ -53,5 +52,6 @@ export const publicSelector = {
   category,
   product,
   order,
+  orderToProduct,
   review,
 };
