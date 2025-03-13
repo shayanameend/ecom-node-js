@@ -33,7 +33,7 @@ async function getVendors(request: Request, response: Response) {
 
     if (categoryId) {
       const category = await prisma.category.findUnique({
-        where: { id: categoryId, status: "APPROVED", isDeleted: false },
+        where: { id: categoryId },
         select: { id: true },
       });
 
