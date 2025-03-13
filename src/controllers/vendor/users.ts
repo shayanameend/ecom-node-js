@@ -46,11 +46,6 @@ async function getUsers(request: Request, response: Response) {
     }
 
     const where: Prisma.UserWhereInput = {
-      auth: {
-        status: "APPROVED",
-        isVerified: true,
-        isDeleted: false,
-      },
       orders: {
         some: {
           orderToProduct: {
@@ -163,11 +158,6 @@ async function getUser(request: Request, response: Response) {
     const user = await prisma.user.findUnique({
       where: {
         id,
-        auth: {
-          status: "APPROVED",
-          isVerified: true,
-          isDeleted: false,
-        },
         orders: {
           some: {
             orderToProduct: {
@@ -193,6 +183,11 @@ async function getUser(request: Request, response: Response) {
             orderToProduct: {
               select: {
                 ...publicSelector.orderToProduct,
+                product: {
+                  select: {
+                    ...publicSelector.product,
+                  },
+                },
               },
             },
           },

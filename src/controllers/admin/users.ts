@@ -4,6 +4,7 @@ import type { Request, Response } from "express";
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { adminSelector } from "~/selectors/admin";
+import { publicSelector } from "~/selectors/public";
 import { userSelector } from "~/selectors/user";
 import {
   getUserParamsSchema,
@@ -139,6 +140,21 @@ async function getUser(request: Request, response: Response) {
         auth: {
           select: {
             ...adminSelector.auth,
+          },
+        },
+        orders: {
+          select: {
+            ...publicSelector.order,
+            orderToProduct: {
+              select: {
+                ...publicSelector.orderToProduct,
+                product: {
+                  select: {
+                    ...publicSelector.product,
+                  },
+                },
+              },
+            },
           },
         },
       },
