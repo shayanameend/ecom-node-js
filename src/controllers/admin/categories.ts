@@ -21,14 +21,14 @@ async function getCategories(request: Request, response: Response) {
 
     const where: Prisma.CategoryWhereInput = {};
 
-    if (name !== undefined) {
+    if (name) {
       where.name = {
         contains: name,
         mode: "insensitive",
       };
     }
 
-    if (status !== undefined) {
+    if (status) {
       where.status = status;
     }
 
