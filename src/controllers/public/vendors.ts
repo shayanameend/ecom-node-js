@@ -132,7 +132,6 @@ async function getVendor(request: Request, response: Response) {
 
     const where: Prisma.ProductWhereInput = {
       isDeleted: false,
-      category: { status: "APPROVED", isDeleted: false },
     };
 
     if (name) {
