@@ -5,6 +5,7 @@ import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { publicSelector } from "~/selectors/public";
 import { userSelector } from "~/selectors/user";
+import { vendorSelector } from "~/selectors/vendor";
 import {
   getOrderParamsSchema,
   getOrdersQuerySchema,
@@ -25,6 +26,67 @@ async function getOrders(request: Request, response: Response) {
       vendorId,
       productId,
     } = getOrdersQuerySchema.parse(request.query);
+
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId },
+        select: { id: true },
+      });
+
+      if (!category) {
+        return response.success(
+          {
+            data: { orders: [] },
+            meta: { total: 0, pages: 1, limit, page },
+          },
+          {
+            message: "Orders fetched successfully!",
+          },
+        );
+      }
+    }
+
+    if (vendorId) {
+      const vendor = await prisma.vendor.findUnique({
+        where: {
+          id: vendorId,
+        },
+        select: { id: true },
+      });
+
+      if (!vendor) {
+        return response.success(
+          {
+            data: { orders: [] },
+            meta: { total: 0, pages: 1, limit, page },
+          },
+          {
+            message: "Orders fetched successfully!",
+          },
+        );
+      }
+    }
+
+    if (productId) {
+      const product = await prisma.product.findUnique({
+        where: {
+          id: productId,
+        },
+        select: { id: true },
+      });
+
+      if (!product) {
+        return response.success(
+          {
+            data: { orders: [] },
+            meta: { total: 0, pages: 1, limit, page },
+          },
+          {
+            message: "Orders fetched successfully!",
+          },
+        );
+      }
+    }
 
     const where: Prisma.OrderWhereInput = {};
 
@@ -92,6 +154,11 @@ async function getOrders(request: Request, response: Response) {
         orderToProduct: {
           select: {
             ...publicSelector.orderToProduct,
+            product: {
+              select: {
+                ...publicSelector.product,
+              },
+            },
           },
         },
         user: {
@@ -132,6 +199,21 @@ async function getOrder(request: Request, response: Response) {
         orderToProduct: {
           select: {
             ...publicSelector.orderToProduct,
+            product: {
+              select: {
+                ...publicSelector.product,
+                category: {
+                  select: {
+                    ...publicSelector.category,
+                  },
+                },
+                vendor: {
+                  select: {
+                    ...vendorSelector.profile,
+                  },
+                },
+              },
+            },
           },
         },
         user: {
@@ -179,6 +261,21 @@ async function toggleOrderStatus(request: Request, response: Response) {
         orderToProduct: {
           select: {
             ...publicSelector.orderToProduct,
+            product: {
+              select: {
+                ...publicSelector.product,
+                category: {
+                  select: {
+                    ...publicSelector.category,
+                  },
+                },
+                vendor: {
+                  select: {
+                    ...vendorSelector.profile,
+                  },
+                },
+              },
+            },
           },
         },
         user: {
