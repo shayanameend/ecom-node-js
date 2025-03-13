@@ -36,7 +36,7 @@ async function getOrders(request: Request, response: Response) {
       return response.success(
         {
           data: { orders: [] },
-          meta: { total: 0, pages: 0, limit, page },
+          meta: { total: 0, pages: 1, limit, page },
         },
         {
           message: "Orders fetched successfully!",

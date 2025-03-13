@@ -14,24 +14,45 @@ async function getReviews(request: Request, response: Response) {
     const { productId } = getReviewsParamsSchema.parse(request.params);
     const { page, limit, sort } = getReviewsQuerySchema.parse(request.query);
 
+    const product = await prisma.product.findUnique({
+      where: {
+        id: productId,
+        isDeleted: false,
+        category: {
+          status: "APPROVED",
+          isDeleted: false,
+        },
+        vendor: {
+          auth: {
+            status: "APPROVED",
+            isVerified: true,
+            isDeleted: false,
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!product) {
+      return response.success(
+        {
+          data: { reviews: [] },
+          meta: { total: 0, pages: 1, limit, page },
+        },
+        {
+          message: "Reviews fetched successfully!",
+        },
+      );
+    }
+
     const where: Prisma.ReviewWhereInput = {
       order: {
         orderToProduct: {
           some: {
             product: {
               id: productId,
-              isDeleted: false,
-              category: {
-                status: "APPROVED",
-                isDeleted: false,
-              },
-              vendor: {
-                auth: {
-                  status: "APPROVED",
-                  isVerified: true,
-                  isDeleted: false,
-                },
-              },
             },
           },
         },

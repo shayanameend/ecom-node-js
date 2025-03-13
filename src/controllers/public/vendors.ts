@@ -26,7 +26,7 @@ async function getVendors(request: Request, response: Response) {
         return response.success(
           {
             data: { vendors: [] },
-            meta: { total: 0, pages: 0, limit, page },
+            meta: { total: 0, pages: 1, limit, page },
           },
           {
             message: "Vendors fetched successfully!",

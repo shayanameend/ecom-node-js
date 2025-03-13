@@ -37,7 +37,7 @@ async function getUsers(request: Request, response: Response) {
       return response.success(
         {
           data: { users: [] },
-          meta: { total: 0, pages: 0, limit, page },
+          meta: { total: 0, pages: 1, limit, page },
         },
         {
           message: "Users fetched successfully!",

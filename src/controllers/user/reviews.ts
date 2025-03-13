@@ -24,6 +24,20 @@ async function createReview(request: Request, response: Response) {
       throw new BadResponse("Failed to create review!");
     }
 
+    const order = await prisma.order.findUnique({
+      where: {
+        id: orderId,
+        userId: user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!order) {
+      throw new BadResponse("Failed to create review!");
+    }
+
     const review = await prisma.review.create({
       data: {
         ...validatedData,

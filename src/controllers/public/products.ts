@@ -34,7 +34,7 @@ async function getProducts(request: Request, response: Response) {
         return response.success(
           {
             data: { products: [] },
-            meta: { total: 0, pages: 0, limit, page },
+            meta: { total: 0, pages: 1, limit, page },
           },
           {
             message: "Products fetched successfully!",
@@ -60,7 +60,7 @@ async function getProducts(request: Request, response: Response) {
         return response.success(
           {
             data: { products: [] },
-            meta: { total: 0, pages: 0, limit, page },
+            meta: { total: 0, pages: 1, limit, page },
           },
           {
             message: "Products fetched successfully!",
