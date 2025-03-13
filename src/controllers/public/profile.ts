@@ -48,6 +48,18 @@ async function createProfile(request: Request, response: Response) {
               phone: true,
               createdAt: true,
               updatedAt: true,
+              auth: {
+                select: {
+                  id: true,
+                  email: true,
+                  status: true,
+                  role: true,
+                  isVerified: true,
+                  isDeleted: true,
+                  createdAt: true,
+                  updatedAt: true,
+                },
+              },
             },
           });
 
@@ -105,6 +117,18 @@ async function createProfile(request: Request, response: Response) {
               pickupAddress: true,
               createdAt: true,
               updatedAt: true,
+              auth: {
+                select: {
+                  id: true,
+                  email: true,
+                  status: true,
+                  role: true,
+                  isVerified: true,
+                  isDeleted: true,
+                  createdAt: true,
+                  updatedAt: true,
+                },
+              },
             },
           });
 
@@ -160,6 +184,18 @@ async function createProfile(request: Request, response: Response) {
               deliveryAddress: true,
               createdAt: true,
               updatedAt: true,
+              auth: {
+                select: {
+                  id: true,
+                  email: true,
+                  status: true,
+                  role: true,
+                  isVerified: true,
+                  isDeleted: true,
+                  createdAt: true,
+                  updatedAt: true,
+                },
+              },
             },
           });
 

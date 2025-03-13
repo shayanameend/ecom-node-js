@@ -18,6 +18,18 @@ async function getProfile(request: Request, response: Response) {
         phone: true,
         createdAt: true,
         updatedAt: true,
+        auth: {
+          select: {
+            id: true,
+            email: true,
+            status: true,
+            role: true,
+            isVerified: true,
+            isDeleted: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
       },
     });
 
@@ -82,6 +94,18 @@ async function updateProfile(request: Request, response: Response) {
         phone: true,
         createdAt: true,
         updatedAt: true,
+        auth: {
+          select: {
+            id: true,
+            email: true,
+            status: true,
+            role: true,
+            isVerified: true,
+            isDeleted: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
       },
     });
 
