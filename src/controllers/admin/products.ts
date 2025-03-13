@@ -3,6 +3,8 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { adminSelector } from "~/selectors/admin";
+import { publicSelector } from "~/selectors/public";
 import { vendorSelector } from "~/selectors/vendor";
 import { sendMessage } from "~/utils/mail";
 import {
@@ -26,6 +28,44 @@ async function getProducts(request: Request, response: Response) {
       categoryId,
       vendorId,
     } = getProductsQuerySchema.parse(request.query);
+
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId },
+        select: { id: true },
+      });
+
+      if (!category) {
+        return response.success(
+          {
+            data: { products: [] },
+            meta: { total: 0, pages: 0, limit, page },
+          },
+          {
+            message: "Products fetched successfully!",
+          },
+        );
+      }
+    }
+
+    if (vendorId) {
+      const vendor = await prisma.vendor.findUnique({
+        where: { id: vendorId },
+        select: { id: true },
+      });
+
+      if (!vendor) {
+        return response.success(
+          {
+            data: { products: [] },
+            meta: { total: 0, pages: 0, limit, page },
+          },
+          {
+            message: "Products fetched successfully!",
+          },
+        );
+      }
+    }
 
     const where: Prisma.ProductWhereInput = {};
 
@@ -114,6 +154,16 @@ async function getProduct(request: Request, response: Response) {
       where: { id },
       select: {
         ...vendorSelector.product,
+        category: {
+          select: {
+            ...adminSelector.category,
+          },
+        },
+        vendor: {
+          select: {
+            ...publicSelector.vendor,
+          },
+        },
       },
     });
 
@@ -144,6 +194,16 @@ async function toggleProductIsDeleted(request: Request, response: Response) {
       data: validatedData,
       select: {
         ...vendorSelector.product,
+        category: {
+          select: {
+            ...adminSelector.category,
+          },
+        },
+        vendor: {
+          select: {
+            ...publicSelector.vendor,
+          },
+        },
       },
     });
 
