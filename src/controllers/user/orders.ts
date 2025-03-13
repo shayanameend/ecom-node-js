@@ -26,6 +26,84 @@ async function getOrders(request: Request, response: Response) {
       productId,
     } = getOrdersQuerySchema.parse(request.query);
 
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId, status: "APPROVED", isDeleted: false },
+        select: { id: true },
+      });
+
+      if (!category) {
+        return response.success(
+          {
+            data: { orders: [] },
+            meta: { total: 0, pages: 1, limit, page },
+          },
+          {
+            message: "Orders fetched successfully!",
+          },
+        );
+      }
+    }
+
+    if (vendorId) {
+      const vendor = await prisma.vendor.findUnique({
+        where: {
+          id: vendorId,
+          auth: {
+            status: "APPROVED",
+            isVerified: true,
+            isDeleted: false,
+          },
+        },
+        select: { id: true },
+      });
+
+      if (!vendor) {
+        return response.success(
+          {
+            data: { orders: [] },
+            meta: { total: 0, pages: 1, limit, page },
+          },
+          {
+            message: "Orders fetched successfully!",
+          },
+        );
+      }
+    }
+
+    if (productId) {
+      const product = await prisma.product.findUnique({
+        where: {
+          id: productId,
+          isDeleted: false,
+          category: {
+            status: "APPROVED",
+            isDeleted: false,
+          },
+          vendor: {
+            auth: {
+              status: "APPROVED",
+              isVerified: true,
+              isDeleted: false,
+            },
+          },
+        },
+        select: { id: true },
+      });
+
+      if (!product) {
+        return response.success(
+          {
+            data: { orders: [] },
+            meta: { total: 0, pages: 1, limit, page },
+          },
+          {
+            message: "Orders fetched successfully!",
+          },
+        );
+      }
+    }
+
     const user = await prisma.user.findUnique({
       where: { authId: request.user.id },
       select: {
@@ -105,11 +183,11 @@ async function getOrders(request: Request, response: Response) {
         orderToProduct: {
           select: {
             ...publicSelector.orderToProduct,
-          },
-        },
-        user: {
-          select: {
-            ...userSelector.profile,
+            product: {
+              select: {
+                ...publicSelector.product,
+              },
+            },
           },
         },
       },
@@ -153,11 +231,21 @@ async function getOrder(request: Request, response: Response) {
         orderToProduct: {
           select: {
             ...publicSelector.orderToProduct,
-          },
-        },
-        user: {
-          select: {
-            ...userSelector.profile,
+            product: {
+              select: {
+                ...publicSelector.product,
+                category: {
+                  select: {
+                    ...publicSelector.category,
+                  },
+                },
+                vendor: {
+                  select: {
+                    ...vendorSelector.profile,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -186,17 +274,6 @@ async function createOrder(request: Request, response: Response) {
       request.body,
     );
 
-    const user = await prisma.user.findUnique({
-      where: { authId: request.user.id },
-      select: {
-        id: true,
-      },
-    });
-
-    if (!user) {
-      throw new BadResponse("Failed to create order!");
-    }
-
     const products = await prisma.product.findMany({
       where: {
         id: {
@@ -204,7 +281,15 @@ async function createOrder(request: Request, response: Response) {
         },
         isDeleted: false,
         category: {
+          status: "APPROVED",
           isDeleted: false,
+        },
+        vendor: {
+          auth: {
+            status: "APPROVED",
+            isVerified: true,
+            isDeleted: false,
+          },
         },
       },
       select: {
@@ -248,6 +333,17 @@ async function createOrder(request: Request, response: Response) {
       return totalPrice + (productForOrder?.quantity || 1) * product.price;
     }, 0);
 
+    const user = await prisma.user.findUnique({
+      where: { authId: request.user.id },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!user) {
+      throw new BadResponse("Failed to create order!");
+    }
+
     const order = await prisma.$transaction(async (tx) => {
       const newOrder = await tx.order.create({
         data: {
@@ -259,11 +355,21 @@ async function createOrder(request: Request, response: Response) {
           orderToProduct: {
             select: {
               ...publicSelector.orderToProduct,
-            },
-          },
-          user: {
-            select: {
-              ...userSelector.profile,
+              product: {
+                select: {
+                  ...publicSelector.product,
+                  category: {
+                    select: {
+                      ...publicSelector.category,
+                    },
+                  },
+                  vendor: {
+                    select: {
+                      ...vendorSelector.profile,
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -275,11 +381,15 @@ async function createOrder(request: Request, response: Response) {
             (productForOrder) => productForOrder.productId === product.id,
           );
 
+          if (!productForOrder) {
+            throw new BadResponse("Failed to create order!");
+          }
+
           return {
             orderId: newOrder.id,
             productId: product.id,
             price: product.price,
-            quantity: productForOrder?.quantity || 1,
+            quantity: productForOrder.quantity,
           };
         }),
       });
