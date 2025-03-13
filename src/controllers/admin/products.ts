@@ -214,7 +214,7 @@ async function toggleProductIsDeleted(request: Request, response: Response) {
         data: { product },
       },
       {
-        message: "Product updated successfully!",
+        message: `Product ${product.isDeleted ? "deleted" : "restored"} successfully!`,
       },
     );
   } catch (error) {
