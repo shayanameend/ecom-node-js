@@ -5,7 +5,6 @@ import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { adminSelector } from "~/selectors/admin";
 import { vendorSelector } from "~/selectors/vendor";
-import { sendMessage } from "~/utils/mail";
 import {
   getProductParamsSchema,
   getProductsQuerySchema,
@@ -208,33 +207,6 @@ async function toggleProductIsDeleted(request: Request, response: Response) {
 
     if (!product) {
       throw new NotFoundResponse("Product not found!");
-    }
-
-    const email = (
-      await prisma.product.findUnique({
-        where: { id },
-        select: {
-          vendor: {
-            select: {
-              auth: {
-                select: {
-                  email: true,
-                },
-              },
-            },
-          },
-        },
-      })
-    )?.vendor.auth.email;
-
-    if (email) {
-      sendMessage({
-        to: email,
-        subject: `Product ${validatedData.isDeleted ? "Deleted" : "Restored"}`,
-        text: `Product ${product.name} with id ${product.id} has been ${
-          validatedData.isDeleted ? "deleted" : "restored"
-        }`,
-      });
     }
 
     return response.success(
