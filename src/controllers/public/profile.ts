@@ -33,34 +33,38 @@ async function createProfile(request: Request, response: Response) {
           request.body,
         );
 
-        const profile = await prisma.admin.create({
-          data: {
-            pictureId,
-            name,
-            phone,
-            auth: {
-              connect: {
-                id: request.user.id,
+        const profile = await prisma.$transaction(async (tx) => {
+          const adminProfile = await tx.admin.create({
+            data: {
+              pictureId,
+              name,
+              phone,
+              auth: {
+                connect: {
+                  id: request.user.id,
+                },
               },
             },
-          },
-          select: {
-            id: true,
-            pictureId: true,
-            name: true,
-            phone: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        });
+            select: {
+              id: true,
+              pictureId: true,
+              name: true,
+              phone: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          });
 
-        await prisma.auth.update({
-          where: {
-            id: request.user.id,
-          },
-          data: {
-            role,
-          },
+          await tx.auth.update({
+            where: {
+              id: request.user.id,
+            },
+            data: {
+              role,
+            },
+          });
+
+          return adminProfile;
         });
 
         return response.success(
@@ -78,42 +82,46 @@ async function createProfile(request: Request, response: Response) {
         const { name, description, phone, postalCode, city, pickupAddress } =
           createVendorProfileBodySchema.parse(request.body);
 
-        const profile = await prisma.vendor.create({
-          data: {
-            pictureId,
-            name,
-            description,
-            phone,
-            postalCode,
-            city,
-            pickupAddress,
-            auth: {
-              connect: {
-                id: request.user.id,
+        const profile = await prisma.$transaction(async (tx) => {
+          const vendorProfile = await tx.vendor.create({
+            data: {
+              pictureId,
+              name,
+              description,
+              phone,
+              postalCode,
+              city,
+              pickupAddress,
+              auth: {
+                connect: {
+                  id: request.user.id,
+                },
               },
             },
-          },
-          select: {
-            id: true,
-            pictureId: true,
-            name: true,
-            description: true,
-            phone: true,
-            postalCode: true,
-            city: true,
-            pickupAddress: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        });
+            select: {
+              id: true,
+              pictureId: true,
+              name: true,
+              description: true,
+              phone: true,
+              postalCode: true,
+              city: true,
+              pickupAddress: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          });
 
-        await prisma.auth.update({
-          where: {
-            id: request.user.id,
-          },
-          data: {
-            role,
-          },
+          await tx.auth.update({
+            where: {
+              id: request.user.id,
+            },
+            data: {
+              role,
+            },
+          });
+
+          return vendorProfile;
         });
 
         return response.success(
@@ -131,41 +139,45 @@ async function createProfile(request: Request, response: Response) {
         const { name, phone, postalCode, city, deliveryAddress } =
           createUserProfileBodySchema.parse(request.body);
 
-        const profile = await prisma.user.create({
-          data: {
-            pictureId,
-            name,
-            phone,
-            postalCode,
-            city,
-            deliveryAddress,
-            auth: {
-              connect: {
-                id: request.user.id,
+        const profile = await prisma.$transaction(async (tx) => {
+          const userProfile = await tx.user.create({
+            data: {
+              pictureId,
+              name,
+              phone,
+              postalCode,
+              city,
+              deliveryAddress,
+              auth: {
+                connect: {
+                  id: request.user.id,
+                },
               },
             },
-          },
-          select: {
-            id: true,
-            pictureId: true,
-            name: true,
-            phone: true,
-            postalCode: true,
-            city: true,
-            deliveryAddress: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        });
+            select: {
+              id: true,
+              pictureId: true,
+              name: true,
+              phone: true,
+              postalCode: true,
+              city: true,
+              deliveryAddress: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          });
 
-        await prisma.auth.update({
-          where: {
-            id: request.user.id,
-          },
-          data: {
-            status: "APPROVED",
-            role,
-          },
+          await tx.auth.update({
+            where: {
+              id: request.user.id,
+            },
+            data: {
+              status: "APPROVED",
+              role,
+            },
+          });
+
+          return userProfile;
         });
 
         return response.success(
