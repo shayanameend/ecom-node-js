@@ -4,6 +4,7 @@ import { default as argon } from "argon2";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { adminSelector } from "~/selectors/admin";
 import { signToken } from "~/utils/jwt";
 import { sendOTP } from "~/utils/mail";
 import {
@@ -26,14 +27,7 @@ async function signUp(request: Request, response: Response) {
     const existingUser = await prisma.auth.findUnique({
       where: { email },
       select: {
-        id: true,
-        email: true,
-        status: true,
-        role: true,
-        isVerified: true,
-        isDeleted: true,
-        createdAt: true,
-        updatedAt: true,
+        ...adminSelector.auth,
       },
     });
 
@@ -49,14 +43,7 @@ async function signUp(request: Request, response: Response) {
         password: hashedPassword,
       },
       select: {
-        id: true,
-        email: true,
-        status: true,
-        role: true,
-        isVerified: true,
-        isDeleted: true,
-        createdAt: true,
-        updatedAt: true,
+        ...adminSelector.auth,
       },
     });
 
@@ -121,15 +108,8 @@ async function signIn(request: Request, response: Response) {
     const user = await prisma.auth.findUnique({
       where: { email },
       select: {
-        id: true,
-        email: true,
+        ...adminSelector.auth,
         password: true,
-        status: true,
-        role: true,
-        isVerified: true,
-        isDeleted: true,
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -228,14 +208,7 @@ async function forgotPassword(request: Request, response: Response) {
     const user = await prisma.auth.findUnique({
       where: { email },
       select: {
-        id: true,
-        email: true,
-        status: true,
-        role: true,
-        isVerified: true,
-        isDeleted: true,
-        createdAt: true,
-        updatedAt: true,
+        ...adminSelector.auth,
       },
     });
 
@@ -414,14 +387,7 @@ async function updatePassword(request: Request, response: Response) {
       where: { id: request.user.id },
       data: { password: hashedPassword },
       select: {
-        id: true,
-        email: true,
-        status: true,
-        role: true,
-        isVerified: true,
-        isDeleted: true,
-        createdAt: true,
-        updatedAt: true,
+        ...adminSelector.auth,
       },
     });
 
