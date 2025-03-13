@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 
 import { BadResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { publicSelector } from "~/selectors/public";
 import {
   createReviewBodySchema,
   createReviewParamsSchema,
@@ -36,6 +37,9 @@ async function createReview(request: Request, response: Response) {
             id: user.id,
           },
         },
+      },
+      select: {
+        ...publicSelector.review,
       },
     });
 

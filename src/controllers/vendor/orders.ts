@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
-import { vendorSelector } from "~/selectors/vendor";
+import { publicSelector } from "~/selectors/public";
 import {
   getOrderParamsSchema,
   getOrdersQuerySchema,
@@ -103,10 +103,10 @@ async function getOrders(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        ...vendorSelector.order,
+        ...publicSelector.order,
         user: {
           select: {
-            ...vendorSelector.user,
+            ...publicSelector.user,
           },
         },
       },
@@ -152,10 +152,10 @@ async function getOrder(request: Request, response: Response) {
         },
       },
       select: {
-        ...vendorSelector.order,
+        ...publicSelector.order,
         user: {
           select: {
-            ...vendorSelector.user,
+            ...publicSelector.user,
           },
         },
       },
@@ -212,10 +212,10 @@ async function toggleOrderStatus(request: Request, response: Response) {
         status,
       },
       select: {
-        ...vendorSelector.order,
+        ...publicSelector.order,
         user: {
           select: {
-            ...vendorSelector.user,
+            ...publicSelector.user,
           },
         },
       },

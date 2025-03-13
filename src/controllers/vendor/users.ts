@@ -4,7 +4,6 @@ import type { Request, Response } from "express";
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { publicSelector } from "~/selectors/public";
-import { vendorSelector } from "~/selectors/vendor";
 import {
   getUserParamsSchema,
   getUsersQuerySchema,
@@ -117,7 +116,7 @@ async function getUsers(request: Request, response: Response) {
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
       select: {
-        ...vendorSelector.user,
+        ...publicSelector.user,
         auth: {
           select: {
             ...publicSelector.auth,
@@ -181,7 +180,7 @@ async function getUser(request: Request, response: Response) {
         },
       },
       select: {
-        ...vendorSelector.user,
+        ...publicSelector.user,
         auth: {
           select: {
             ...publicSelector.auth,
@@ -189,7 +188,7 @@ async function getUser(request: Request, response: Response) {
         },
         orders: {
           select: {
-            ...vendorSelector.order,
+            ...publicSelector.order,
           },
         },
       },

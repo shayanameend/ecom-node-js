@@ -27,36 +27,7 @@ const product: Prisma.ProductSelect = {
   updatedAt: true,
 };
 
-const order: Prisma.OrderSelect = {
-  id: true,
-  price: true,
-  status: true,
-  orderToProduct: {
-    select: {
-      id: true,
-      price: true,
-      quantity: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  },
-};
-
-const user: Prisma.UserSelect = {
-  id: true,
-  pictureId: true,
-  name: true,
-  postalCode: true,
-  phone: true,
-  city: true,
-  deliveryAddress: true,
-  createdAt: true,
-  updatedAt: true,
-};
-
 export const vendorSelector = {
   profile,
   product,
-  order,
-  user,
 };
