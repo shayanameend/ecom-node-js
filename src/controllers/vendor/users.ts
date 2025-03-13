@@ -123,10 +123,6 @@ async function getUsers(request: Request, response: Response) {
           select: {
             id: true,
             email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
             createdAt: true,
             updatedAt: true,
           },
@@ -157,6 +153,19 @@ async function getUser(request: Request, response: Response) {
   try {
     const { id } = getUserParamsSchema.parse(request.params);
 
+    const vendor = await prisma.vendor.findUnique({
+      where: {
+        authId: request.user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!vendor) {
+      throw new NotFoundResponse("User not found!");
+    }
+
     const user = await prisma.user.findUnique({
       where: {
         id,
@@ -170,7 +179,7 @@ async function getUser(request: Request, response: Response) {
             orderToProduct: {
               some: {
                 product: {
-                  vendorId: request.user.id,
+                  vendorId: vendor.id,
                 },
               },
             },
@@ -186,10 +195,6 @@ async function getUser(request: Request, response: Response) {
           select: {
             id: true,
             email: true,
-            status: true,
-            role: true,
-            isVerified: true,
-            isDeleted: true,
             createdAt: true,
             updatedAt: true,
           },
