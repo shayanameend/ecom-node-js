@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { BadResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { publicSelector } from "~/selectors/public";
+import { userSelector } from "~/selectors/user";
 import { vendorSelector } from "~/selectors/vendor";
 import { addFile } from "~/utils/file";
 import {
@@ -154,15 +155,7 @@ async function createProfile(request: Request, response: Response) {
               },
             },
             select: {
-              id: true,
-              pictureId: true,
-              name: true,
-              phone: true,
-              postalCode: true,
-              city: true,
-              deliveryAddress: true,
-              createdAt: true,
-              updatedAt: true,
+              ...userSelector.profile,
               auth: {
                 select: {
                   ...publicSelector.auth,
