@@ -5,6 +5,7 @@ import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import {
   getVendorParamsSchema,
+  getVendorQuerySchema,
   getVendorsQuerySchema,
   updateVendorBodySchema,
   updateVendorParamsSchema,
@@ -25,7 +26,27 @@ async function getVendors(request: Request, response: Response) {
       status,
       isVerified,
       isDeleted,
+      categoryId,
     } = getVendorsQuerySchema.parse(request.query);
+
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId, status: "APPROVED", isDeleted: false },
+        select: { id: true },
+      });
+
+      if (!category) {
+        return response.success(
+          {
+            data: { vendors: [] },
+            meta: { total: 0, pages: 0, limit, page },
+          },
+          {
+            message: "Vendors fetched successfully!",
+          },
+        );
+      }
+    }
 
     const where: Prisma.VendorWhereInput = {};
 
@@ -91,11 +112,24 @@ async function getVendors(request: Request, response: Response) {
       };
     }
 
+    if (categoryId) {
+      where.products = {
+        some: {
+          categoryId,
+        },
+      };
+    }
+
     const vendors = await prisma.vendor.findMany({
       where,
       take: limit,
       skip: (page - 1) * limit,
       orderBy: {
+        ...(sort === "RELEVANCE" && {
+          products: {
+            _count: "desc",
+          },
+        }),
         ...(sort === "LATEST" && { createdAt: "desc" }),
         ...(sort === "OLDEST" && { createdAt: "asc" }),
       },
@@ -103,7 +137,13 @@ async function getVendors(request: Request, response: Response) {
         id: true,
         pictureId: true,
         name: true,
+        description: true,
+        postalCode: true,
         phone: true,
+        city: true,
+        pickupAddress: true,
+        createdAt: true,
+        updatedAt: true,
         auth: {
           select: {
             id: true,
@@ -116,8 +156,6 @@ async function getVendors(request: Request, response: Response) {
             updatedAt: true,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
@@ -141,6 +179,70 @@ async function getVendors(request: Request, response: Response) {
 async function getVendor(request: Request, response: Response) {
   try {
     const { id } = getVendorParamsSchema.parse(request.params);
+    const {
+      page,
+      limit,
+      sort,
+      name,
+      minStock,
+      minPrice,
+      maxPrice,
+      isDeleted,
+      categoryId,
+    } = getVendorQuerySchema.parse(request.query);
+
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId },
+        select: { id: true },
+      });
+
+      if (!category) {
+        throw new NotFoundResponse("Vendor not found!");
+      }
+    }
+
+    const where: Prisma.ProductWhereInput = {};
+
+    if (name) {
+      where.name = {
+        contains: name,
+        mode: "insensitive",
+      };
+    }
+
+    if (minStock !== undefined) {
+      where.stock = {
+        gte: minStock,
+      };
+    }
+
+    if (minPrice !== undefined) {
+      where.price = {
+        gte: minPrice,
+      };
+    }
+
+    if (maxPrice !== undefined) {
+      where.price = {
+        lte: maxPrice,
+      };
+    }
+
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      where.price = {
+        gte: minPrice,
+        lte: maxPrice,
+      };
+    }
+
+    if (isDeleted !== undefined) {
+      where.isDeleted = isDeleted;
+    }
+
+    if (categoryId) {
+      where.categoryId = categoryId;
+    }
 
     const vendor = await prisma.vendor.findUnique({
       where: { id },
@@ -148,7 +250,13 @@ async function getVendor(request: Request, response: Response) {
         id: true,
         pictureId: true,
         name: true,
+        description: true,
+        postalCode: true,
         phone: true,
+        city: true,
+        pickupAddress: true,
+        createdAt: true,
+        updatedAt: true,
         auth: {
           select: {
             id: true,
@@ -161,8 +269,33 @@ async function getVendor(request: Request, response: Response) {
             updatedAt: true,
           },
         },
-        createdAt: true,
-        updatedAt: true,
+        products: {
+          where,
+          take: limit,
+          skip: (page - 1) * limit,
+          orderBy: {
+            ...(sort === "RELEVANCE" && {
+              orderToProduct: { _count: "desc" },
+            }),
+            ...(sort === "LATEST" && { createdAt: "desc" }),
+            ...(sort === "OLDEST" && { createdAt: "asc" }),
+          },
+          select: {
+            id: true,
+            pictureIds: true,
+            name: true,
+            description: true,
+            sku: true,
+            stock: true,
+            price: true,
+            salePrice: true,
+            isDeleted: true,
+            categoryId: true,
+            vendorId: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
       },
     });
 
@@ -199,7 +332,13 @@ async function updateVendor(request: Request, response: Response) {
         id: true,
         pictureId: true,
         name: true,
+        description: true,
+        postalCode: true,
         phone: true,
+        city: true,
+        pickupAddress: true,
+        createdAt: true,
+        updatedAt: true,
         auth: {
           select: {
             id: true,
@@ -212,8 +351,6 @@ async function updateVendor(request: Request, response: Response) {
             updatedAt: true,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
 
