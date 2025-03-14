@@ -18,7 +18,7 @@ import {
 
 async function signUp(request: Request, response: Response) {
   try {
-    if (request.body.emai) {
+    if (request.body.email) {
       request.body.email = request.body.email.toLowerCase();
     }
 
@@ -99,7 +99,7 @@ async function signUp(request: Request, response: Response) {
 
 async function signIn(request: Request, response: Response) {
   try {
-    if (request.body.emai) {
+    if (request.body.email) {
       request.body.email = request.body.email.toLowerCase();
     }
 
@@ -199,7 +199,7 @@ async function signIn(request: Request, response: Response) {
 
 async function forgotPassword(request: Request, response: Response) {
   try {
-    if (request.body.emai) {
+    if (request.body.email) {
       request.body.email = request.body.email.toLowerCase();
     }
 
