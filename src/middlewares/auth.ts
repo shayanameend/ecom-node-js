@@ -32,13 +32,8 @@ function verifyRequest({
 }: Readonly<VerifyRequestParams>) {
   return async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const bearerToken = request.headers.authorization;
-
-      if (!bearerToken) {
-        throw new UnauthorizedResponse("Unauthorized!");
-      }
-
-      const token = bearerToken.split(" ")[1];
+      // Get token from cookie instead of authorization header
+      const token = request.cookies?.token;
 
       if (!token) {
         throw new UnauthorizedResponse("Unauthorized!");
@@ -102,6 +97,13 @@ function verifyRequest({
       next();
     } catch (error) {
       if (error instanceof TokenExpiredError) {
+        // Clear expired cookie
+        response.clearCookie("token", {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          path: "/",
+        });
+
         return response.unauthorized(
           {},
           {
@@ -111,6 +113,13 @@ function verifyRequest({
       }
 
       if (error instanceof JsonWebTokenError) {
+        // Clear invalid cookie
+        response.clearCookie("token", {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          path: "/",
+        });
+
         return response.unauthorized(
           {},
           {
