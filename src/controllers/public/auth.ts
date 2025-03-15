@@ -16,15 +16,6 @@ import {
   verifyOtpBodySchema,
 } from "~/validators/public/auth";
 
-// Cookie configuration
-const COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "strict" as const,
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  path: "/",
-};
-
 async function signUp(request: Request, response: Response) {
   try {
     if (request.body.email) {
@@ -93,15 +84,12 @@ async function signUp(request: Request, response: Response) {
       type: "VERIFY",
     });
 
-    // Set token in cookie instead of response body
-    response.cookie("token", token, COOKIE_OPTIONS);
-
     return response.created(
       {
-        data: {},
+        data: { token },
       },
       {
-        message: "Sign Up Successful!",
+        message: "Sign Up Successfull!",
       },
     );
   } catch (error) {
@@ -173,12 +161,11 @@ async function signIn(request: Request, response: Response) {
         type: "VERIFY",
       });
 
-      // Set token in cookie
-      response.cookie("token", token, COOKIE_OPTIONS);
-
       return response.success(
         {
-          data: {},
+          data: {
+            token,
+          },
         },
         {
           message: "OTP Sent Successfully!",
@@ -194,17 +181,15 @@ async function signIn(request: Request, response: Response) {
     // @ts-ignore
     user.password = undefined;
 
-    // Set token in cookie
-    response.cookie("token", token, COOKIE_OPTIONS);
-
     return response.success(
       {
         data: {
+          token,
           user,
         },
       },
       {
-        message: "Sign In Successful!",
+        message: "Sign In Successfull!",
       },
     );
   } catch (error) {
@@ -268,12 +253,9 @@ async function forgotPassword(request: Request, response: Response) {
       type: "RESET",
     });
 
-    // Set token in cookie
-    response.cookie("token", token, COOKIE_OPTIONS);
-
     return response.success(
       {
-        data: {},
+        data: { token },
       },
       {
         message: "OTP Sent Successfully!",
@@ -379,12 +361,10 @@ async function verifyOtp(request: Request, response: Response) {
       type: type === "VERIFY" ? "ACCESS" : type,
     });
 
-    // Set token in cookie
-    response.cookie("token", token, COOKIE_OPTIONS);
-
     return response.success(
       {
         data: {
+          token,
           user: type === "VERIFY" ? request.user : undefined,
         },
       },
@@ -431,37 +411,15 @@ async function refresh(request: Request, response: Response) {
       type: "ACCESS",
     });
 
-    // Set token in cookie
-    response.cookie("token", token, COOKIE_OPTIONS);
-
     return response.success(
       {
         data: {
+          token,
           user: request.user,
         },
       },
       {
         message: "Token Refreshed Successfully!",
-      },
-    );
-  } catch (error) {
-    return handleErrors({ response, error });
-  }
-}
-
-async function signOut(request: Request, response: Response) {
-  try {
-    // Clear the auth cookie
-    response.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-    });
-
-    return response.success(
-      {},
-      {
-        message: "Signed Out Successfully!",
       },
     );
   } catch (error) {
@@ -477,5 +435,4 @@ export {
   verifyOtp,
   updatePassword,
   refresh,
-  signOut,
 };
